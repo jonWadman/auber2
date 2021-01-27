@@ -46,10 +46,12 @@ class UtilsTest {
         //lower bound > upper bound
         lowerBound = 115f;
         upperBound = 23f;
-        //generated number is greater than lower bound
-        assertTrue(Utils.randomFloatInRange(random,lowerBound,upperBound)>=lowerBound);
-        //generated number is less than higher bound
-        assertTrue(Utils.randomFloatInRange(random,lowerBound,upperBound)<=upperBound);
+        //testing if the method throws an exception
+        boolean threwException = false;
+        try{
+            Utils.randomFloatInRange(random,lowerBound,upperBound);
+        }catch (IllegalArgumentException e){threwException=true;}
+        assertTrue(threwException,"IllegalArgumentException thrown");
     }
 
     @Test
@@ -83,10 +85,12 @@ class UtilsTest {
         //lower bound > upper bound
         lowerBound = 115;
         upperBound = 23;
-        //generated number is greater than lower bound
-        assertTrue(Utils.randomIntInRange(random,lowerBound,upperBound)>=lowerBound);
-        //generated number is less than higher bound
-        assertTrue(Utils.randomIntInRange(random,lowerBound,upperBound)<=upperBound);
+        //testing if the method throws an exception
+        boolean threwException = false;
+        try{
+            Utils.randomIntInRange(random,lowerBound,upperBound);
+        }catch (IllegalArgumentException e){threwException=true;}
+        assertTrue(threwException,"IllegalArgumentException thrown");
     }
 
     @Test
@@ -96,12 +100,12 @@ class UtilsTest {
         //List used for testing
         List<Integer> testList = new ArrayList<Integer>();
         //Empty list
-        //testing in the methods throws an exception
+        //testing if the method throws an exception
         boolean threwException = false;
         try{
             Utils.randomListItem(random,testList);
         }catch (IllegalArgumentException e){threwException=true;}
-        assertTrue(threwException);
+        assertTrue(threwException,"IllegalArgumentException thrown");
 
         //List with 1 item
         testList.add(1);

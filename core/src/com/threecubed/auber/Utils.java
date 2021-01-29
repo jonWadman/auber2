@@ -35,10 +35,13 @@ public final class Utils {
    * @param lowerBound The lower bound to generate a random int from (inclusive)
    * @param upperBound The upper bound to generate a random int from (inclusive)
    *
+   * @throws IllegalArgumentException if upperBound < lowerBound
    * @return A randomly generated integer between the 2 bounds
    * */
   public static float randomFloatInRange(Random randomNumberGenerator, float lowerBound,
       float upperBound) {
+    //lower bound cannot > upper bound
+    if(lowerBound>upperBound){throw  new IllegalArgumentException();}
     return (randomNumberGenerator.nextFloat() * (upperBound - lowerBound)) + lowerBound;
   }
 
@@ -48,14 +51,27 @@ public final class Utils {
    * @param randomNumberGenerator The random number generator to use
    * @param lowerBound The lower bound to generate a random int from (inclusive)
    * @param upperBound The upper bound to generate a random int from (inclusive)
-   *
+   * @throws IllegalArgumentException if upperBound<lowerBound
    * @return A randomly generated integer between the 2 bounds
    * */
   public static int randomIntInRange(Random randomNumberGenerator, int lowerBound, int upperBound) {
+    //lower bound cannot > upper bound
+    if(lowerBound>upperBound){throw  new IllegalArgumentException();}
     return randomNumberGenerator.nextInt(upperBound - lowerBound + 1) + lowerBound;
   }
 
+  /**
+   * Select a random item from a list
+   * @param randomNumberGenerator Random number generator used
+   * @param list List from which the item is selected
+   * @param <T> The type of the list
+   * @throws IllegalArgumentException if list is empty
+   * @return An item of type T
+   */
   public static <T> T randomListItem(Random randomNumberGenerator, List<T> list) {
+    //list must have at least one item
+    if(list.size()==0){throw new IllegalArgumentException();};
     return list.get(randomIntInRange(randomNumberGenerator, 0, list.size()));
   }
+  //sometimes this fails for some reason idk why
 }

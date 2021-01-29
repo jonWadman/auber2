@@ -46,7 +46,7 @@ public abstract class GameEntity {
    * @param sprite The sprite the entity should use
    * */
   public GameEntity(float x, float y, Sprite sprite) {
-    this.sprite = sprite; 
+    this.sprite = sprite;
     sprite.setOriginCenter();
 
     position = new Vector2(x, y);

@@ -34,7 +34,7 @@ public class GameEntityTest {
         //AuberGame game= new AuberGame();
         TextureAtlas atlas = new TextureAtlas("C:/Users/sarah/Documents/auber2/core/assets/auber.atlas");
         Sprite sprite=atlas.createSprite("player");
-        Player player=new Player(0,0,sprite);
+        Player player=new Player(64f,64f,sprite);
         Assert.assertEquals(5,5);
 
     }

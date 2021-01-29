@@ -201,7 +201,10 @@ public class World {
     camera.setToOrtho(false, 480, 270);
     camera.update();
 
-    Player player = new Player(64f, 64f, this);
+
+    Player player = new Player(64f, 64f, this.atlas.createSprite("player"));
+
+
     queueEntityAdd(player);
     this.player = player;
 

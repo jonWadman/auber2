@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObjects;
@@ -41,11 +42,10 @@ public class Player extends GameEntity {
 
   private ShapeRenderer rayRenderer = new ShapeRenderer();
 
-  public Player(float x, float y, World world) {
-    super(x, y, world.atlas.createSprite("player"));
-  }
+  public Player(float x, float y, Sprite sprite) {  super(x, y,sprite);}
 
   /**
+   *
    * Handle player controls such as movement, interaction and firing the teleporing gun.
    *
    * @param world The game world

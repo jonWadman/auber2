@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="de.tomgrill.gdxtesting.GameEntityTest" tests="5" skipped="0" failures="1" errors="0" timestamp="2021-01-29T11:22:07" hostname="LAPTOP-2C2PBR86" time="0.135">
+<testsuite name="de.tomgrill.gdxtesting.GameEntityTest" tests="5" skipped="0" failures="1" errors="0" timestamp="2021-01-29T11:27:11" hostname="LAPTOP-2C2PBR86" time="0.131">
   <properties/>
   <testcase name="getCenter" classname="de.tomgrill.gdxtesting.GameEntityTest" time="0.002"/>
   <testcase name="entityOnScreen" classname="de.tomgrill.gdxtesting.GameEntityTest" time="0.0"/>
-  <testcase name="getNearbyObjects" classname="de.tomgrill.gdxtesting.GameEntityTest" time="0.068">
+  <testcase name="getNearbyObjects" classname="de.tomgrill.gdxtesting.GameEntityTest" time="0.065">
     <failure message="java.lang.NullPointerException" type="java.lang.NullPointerException">java.lang.NullPointerException
 	at com.badlogic.gdx.graphics.glutils.ShaderProgram.loadShader(ShaderProgram.java:205)
 	at com.badlogic.gdx.graphics.glutils.ShaderProgram.compileShaders(ShaderProgram.java:184)
@@ -33,7 +33,7 @@
 </failure>
   </testcase>
   <testcase name="getCenterX" classname="de.tomgrill.gdxtesting.GameEntityTest" time="0.001"/>
-  <testcase name="getCenterY" classname="de.tomgrill.gdxtesting.GameEntityTest" time="0.0"/>
+  <testcase name="getCenterY" classname="de.tomgrill.gdxtesting.GameEntityTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

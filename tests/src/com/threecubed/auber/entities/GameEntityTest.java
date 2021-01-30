@@ -1,4 +1,4 @@
-package de.tomgrill.gdxtesting;
+package com.threecubed.auber.entities;
 
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,6 +12,7 @@ import com.threecubed.auber.entities.Player;
 import com.threecubed.auber.screens.GameScreen;
 import com.threecubed.auber.screens.MenuScreen;
 
+import de.tomgrill.gdxtesting.GdxTestRunner;
 import org.junit.Assert;
 import org.junit.Test;
 

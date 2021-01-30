@@ -3,6 +3,7 @@ package com.threecubed.auber;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -200,8 +201,7 @@ public class World {
     // Configure the camera
     camera.setToOrtho(false, 480, 270);
     camera.update();
-
-    Player player = new Player(64f, 64f, this);
+    Player player = new Player(64f, 64f, this.atlas.createSprite("player"),new ShapeRenderer());
     queueEntityAdd(player);
     this.player = player;
 

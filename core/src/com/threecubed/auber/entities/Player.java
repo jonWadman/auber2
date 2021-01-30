@@ -40,9 +40,12 @@ public class Player extends GameEntity {
   public boolean slowed = false;
   public boolean blinded = false;
 
-  private ShapeRenderer rayRenderer = new ShapeRenderer();
+  private ShapeRenderer rayRenderer;
 
-  public Player(float x, float y, Sprite sprite) {  super(x, y,sprite);}
+  public Player(float x, float y, Sprite sprite,ShapeRenderer renderer) {
+    super(x, y,sprite);
+    this.rayRenderer=renderer;
+  }
 
   /**
    *

@@ -3,6 +3,7 @@ package com.threecubed.auber;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -194,6 +195,7 @@ public class World {
    * @param game The game object.
    * */
   public World(AuberGame game) {
+
     this.game = game;
     atlas = game.atlas;
 
@@ -202,7 +204,7 @@ public class World {
     camera.update();
 
 
-    Player player = new Player(64f, 64f, this.atlas.createSprite("player"));
+    Player player = new Player(64f, 64f, this.atlas.createSprite("player"),new ShapeRenderer());
 
 
     queueEntityAdd(player);

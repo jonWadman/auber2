@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 public class UtilsTest {
     Random random;
 
-    @Before
+/*    @Before
     public void setUp() throws Exception {
         //Random used for testing
         random = new Random();
@@ -98,5 +98,5 @@ public class UtilsTest {
         //length > 1
         testList.add(2); testList.add(3); testList.add(4); testList.add(5); testList.add(6);
         assertTrue(testList.contains(Utils.randomListItem(random,testList)));
-    }
+    }*/
 }

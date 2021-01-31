@@ -8,6 +8,6 @@ import  de.tomgrill.gdxtesting.*;
 public class HeadlessTest {
     @Test
     public void bestTestInHistory() {
-
+        return;
     }
 }

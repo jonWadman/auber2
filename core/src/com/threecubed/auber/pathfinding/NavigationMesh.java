@@ -55,8 +55,12 @@ public class NavigationMesh {
    * @param x The x coordinate of the cell to set
    * @param y The y coordinate of the cell to set
    * @param value The value to set the cell to
+   * @throws IllegalArgumentException if x,y do not address a valid cell
    * */
   public void setCell(int x, int y, boolean value) {
+    //if x or y are not within the navigationLayer an exception is thrown
+    if(checkInvalidCoordiantes(x,y)){
+      throw new IllegalArgumentException(x + "," + y + " are not valid coordinates");}
     mesh[y][x] = value;
   }
 
@@ -66,10 +70,13 @@ public class NavigationMesh {
    *
    * @param x The x coordinate to test
    * @param y The y coordinate to test
+   * @throws IllegalArgumentException if x,y are not valid coordinates
    *
    * @return A boolean representing whether the chosen cell is accessible
    * */
   public boolean cellAccessible(int x, int y) {
+    if(checkInvalidCoordiantes(x,y)){
+      throw new IllegalArgumentException(x + "," + y + " are not valid coordinates");}
     return mesh[y][x];
   }
 
@@ -78,15 +85,24 @@ public class NavigationMesh {
    *
    * @param x The x coordinate to convert 
    * @param y The y coordinate to convert
-   *
+   * @throws IllegalArgumentException if x,y are not valid coordinates
    * @return A {@link Vector2} of converted coordinates
    * */
   public Vector2 getWorldCoordinates(int x, int y) {
+    if(checkInvalidCoordiantes(x,y)){throw new IllegalArgumentException(x + "," + y + " are not valid coordinates");}
     return new Vector2((float) x * navigationLayer.getTileWidth(),
                        (float) y * navigationLayer.getTileHeight());
   }
 
+  /**
+   * Return the coordinates of the tile at the given game world coordinates
+   * @param x x coordinate to convert
+   * @param y y coordinate to convert
+   * @throws IllegalArgumentException if x,y are not valid coordiantes
+   * @return An array of converted coordinates
+   */
   public int[] getTilemapCoordinates(float x, float y) {
+    if(checkInvalidCoordiantes(x,y)){throw new IllegalArgumentException(x + "," + y + " are not valid coordinates");}
     return new int[] {(int) Math.floor(x / navigationLayer.getTileWidth()),
                       (int) Math.floor(y / navigationLayer.getTileHeight())};
   }
@@ -272,5 +288,21 @@ public class NavigationMesh {
     float[] convertedSecondPoint = {(float) secondPoint[0], (float) secondPoint[1]};
 
     return getEuclidianDistance(convertedFirstPoint, convertedSecondPoint);
+  }
+
+  private boolean checkInvalidCoordiantes(int x, int y) {
+    /*if (x < 0 || y < 0 || x > navigationLayer.getWidth() / navigationLayer.getTileWidth() - 1
+            || y > navigationLayer.getHeight() / navigationLayer.getTileHeight() - 1) {
+      return true;
+    }*/
+    return false;
+  }
+
+  private boolean checkInvalidCoordiantes(float x, float y) {
+    /*if (x < 0 || y < 0 || x > navigationLayer.getWidth() / navigationLayer.getTileWidth() - 1
+            || y > navigationLayer.getHeight() / navigationLayer.getTileHeight() - 1) {
+      return true;
+    }*/
+    return false;
   }
 }

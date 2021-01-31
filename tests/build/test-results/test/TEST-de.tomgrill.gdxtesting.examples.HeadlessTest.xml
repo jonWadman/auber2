@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="de.tomgrill.gdxtesting.examples.HeadlessTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2021-01-29T01:09:56" hostname="BitCruncher" time="0.0">
+<testsuite name="de.tomgrill.gdxtesting.examples.HeadlessTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2021-01-31T15:55:06" hostname="BitCruncher" time="0.001">
   <properties/>
-  <testcase name="initializationError" classname="de.tomgrill.gdxtesting.examples.HeadlessTest" time="0.0">
+  <testcase name="initializationError" classname="de.tomgrill.gdxtesting.examples.HeadlessTest" time="0.001">
     <failure message="org.junit.runners.model.InvalidTestClassError: Invalid test class 'de.tomgrill.gdxtesting.examples.HeadlessTest':&#10;  1. No runnable methods" type="org.junit.runners.model.InvalidTestClassError">org.junit.runners.model.InvalidTestClassError: Invalid test class 'de.tomgrill.gdxtesting.examples.HeadlessTest':
   1. No runnable methods
 	at org.junit.runners.ParentRunner.validate(ParentRunner.java:525)

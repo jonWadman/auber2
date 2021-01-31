@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.threecubed.auber.AuberGame;
 import com.threecubed.auber.World;
@@ -43,8 +45,9 @@ public class GameScreen extends ScreenAdapter {
   public GameScreen(AuberGame game, boolean demoMode) {
     this.game = game;
     ui = new GameUi(game);
-
-    world = new World(game, demoMode);
+    TiledMap map= new TmxMapLoader().load("map.tmx");
+    OrthogonalTiledMapRenderer renderer=new OrthogonalTiledMapRenderer(map);
+    world = new World(game,demoMode);
 
     for (int i = 0; i < World.MAX_INFILTRATORS_IN_GAME; i++) {
       world.queueEntityAdd(new Infiltrator(world));

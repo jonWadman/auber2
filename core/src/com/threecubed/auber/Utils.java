@@ -71,7 +71,7 @@ public final class Utils {
   public static <T> T randomListItem(Random randomNumberGenerator, List<T> list) {
     //list must have at least one item
     if(list.size()==0){throw new IllegalArgumentException();};
-    return list.get(randomIntInRange(randomNumberGenerator, 0, list.size()));
+    return list.get(randomIntInRange(randomNumberGenerator, 0, list.size()-1));
   }
   //sometimes this fails for some reason idk why
 }

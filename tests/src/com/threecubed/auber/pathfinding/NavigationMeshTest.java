@@ -62,11 +62,11 @@ public class NavigationMeshTest {
 
     //checks in assigning a value to a cell throws an exception
     private void checkThrowsSetCell(int x,int y,boolean value){
-        /*boolean throwsException = false;
+        boolean throwsException = false;
         try{
             testMesh.setCell(x,y,value);
         }catch (IllegalArgumentException e){throwsException = true;}
-        assertTrue(throwsException);*/
+        assertTrue(throwsException);
     }
 
     @Test
@@ -100,11 +100,11 @@ public class NavigationMeshTest {
     }
 
     private void checkThrowsCellAccessible(int x,int y){
-        /*boolean throwsException = false;
+        boolean throwsException = false;
         try{
             testMesh.cellAccessible(x,y);
         }catch (IllegalArgumentException e){throwsException = true;}
-        assertTrue(throwsException);*/
+        assertTrue(throwsException);
     }
 
     @Test
@@ -138,11 +138,11 @@ public class NavigationMeshTest {
     }
 
     private void checkThrowsWorldCoords(int x, int y){
-        /*boolean throwsException = false;
+        boolean throwsException = false;
         try{
             testMesh.getWorldCoordinates(x,y);
         }catch (IllegalArgumentException e){throwsException = true;}
-        assertTrue(throwsException);*/
+        assertTrue(throwsException);
     }
 
     @Test
@@ -178,11 +178,11 @@ public class NavigationMeshTest {
     }
 
     private void checkThrowsTileCoords(float x,float y){
-        /*boolean throwsException = false;
+        boolean throwsException = false;
         try{
             testMesh.getTilemapCoordinates(x,y);
         }catch (IllegalArgumentException e){throwsException = true;}
-        assertTrue(throwsException);*/
+        assertTrue(throwsException);
     }
 
     @Test

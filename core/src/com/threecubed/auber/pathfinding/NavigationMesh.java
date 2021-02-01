@@ -4,6 +4,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.threecubed.auber.entities.GameEntity;
+
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -291,18 +293,13 @@ public class NavigationMesh {
   }
 
   private boolean checkInvalidCoordiantes(int x, int y) {
-    /*if (x < 0 || y < 0 || x > navigationLayer.getWidth() / navigationLayer.getTileWidth() - 1
-            || y > navigationLayer.getHeight() / navigationLayer.getTileHeight() - 1) {
-      return true;
-    }*/
-    return false;
+    return checkInvalidCoordiantes((float) x,(float) y);
   }
 
   private boolean checkInvalidCoordiantes(float x, float y) {
-    /*if (x < 0 || y < 0 || x > navigationLayer.getWidth() / navigationLayer.getTileWidth() - 1
-            || y > navigationLayer.getHeight() / navigationLayer.getTileHeight() - 1) {
+    if(x<0||y<0||y>mesh.length-1||x>mesh[0].length-1){
       return true;
-    }*/
+    }
     return false;
   }
 }

@@ -18,7 +18,7 @@ public class GameUi {
   private static final int CHARGE_METER_WIDTH = 20;
   private static final int CHARGE_METER_MAX_HEIGHT = 100;
   private static final Vector2 CHARGE_METER_POSITION = new Vector2(50f, 50f);
-
+  private static final Vector2 SPECIAL_POWER_POSITION=new Vector2(500,100f);
   private static final Vector2 HEALTHBAR_POSITION = new Vector2(250f, 50f);
   private static final int HEALTHBAR_WIDTH = 20;
   private static final int HEALTHBAR_MAX_HEIGHT = 100;
@@ -57,8 +57,21 @@ public class GameUi {
     drawHealthbar(world, screenBatch);
     drawHealthWarnings(world, screenBatch);
     drawSystemWarnings(world, screenBatch);
+    drawSpecialPower(world,screenBatch);
+
   }
 
+  private void drawSpecialPower(World world, SpriteBatch screenBatch){
+    screenBatch.begin();
+    String power=": None";
+    if (world.infiltratorCount==world.MAX_INFILTRATORS-5 && !world.player.powerBeamUsed) { power=": Super beam";}
+    if (world.infiltratorCount==world.MAX_INFILTRATORS-4 && !world.player.powerShieldUsed){power=": Sheild"; }
+    if (world.infiltratorCount==world.MAX_INFILTRATORS-3 && !world.player.powerStopInfiltratorPowerUsed){ power=":  Stop infiltrator powers";}
+    if (world.infiltratorCount==world.MAX_INFILTRATORS-2 && !world.player.powerRevealUsed){power =":  Reveal infiltators";}
+    if (world.infiltratorCount==world.MAX_INFILTRATORS-1 && !world.player.powerSlowUsed){power=": Slow infiltrators";}
+    uiFont.draw(screenBatch,"Special Power"+power,SPECIAL_POWER_POSITION.x, SPECIAL_POWER_POSITION.y );
+    screenBatch.end();
+  }
   /**
    * Draw the teleporter charge meter.
    *

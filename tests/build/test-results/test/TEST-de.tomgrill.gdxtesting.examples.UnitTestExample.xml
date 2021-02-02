@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-<testsuite name="de.tomgrill.gdxtesting.examples.UnitTestExample" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-01-31T13:05:36" hostname="LAPTOP-2C2PBR86" time="0.0">
-=======
-<testsuite name="de.tomgrill.gdxtesting.examples.UnitTestExample" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-01-31T15:57:32" hostname="BitCruncher" time="0.0">
->>>>>>> 771ccb93ba5f06b825af5fc0849b9ae673840ba0
+<testsuite name="de.tomgrill.gdxtesting.examples.UnitTestExample" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-02-02T18:51:06" hostname="LAPTOP-2C2PBR86" time="0.0">
   <properties/>
   <testcase name="oneEqualsOne" classname="de.tomgrill.gdxtesting.examples.UnitTestExample" time="0.0"/>
   <system-out><![CDATA[]]></system-out>

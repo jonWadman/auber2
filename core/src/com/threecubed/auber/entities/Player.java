@@ -40,12 +40,49 @@ public class Player extends GameEntity {
   public boolean slowed = false;
   public boolean blinded = false;
 
+  public boolean powerBeamUsed=false;
+  public boolean powerShieldUsed=false;
+  public boolean powerStopInfiltratorPowerUsed=false;
+  public boolean powerRevealUsed=false;
+  public boolean powerRevealTrigger=false;
+  public boolean powerSlowUsed=false;
+
   private ShapeRenderer rayRenderer;
 
   public Player(float x, float y, Sprite sprite,ShapeRenderer renderer) {
     super(x, y, sprite);
     this.rayRenderer=renderer;
+
   }
+
+  private void powerOn(Integer Max,Integer infiltratorCount){
+    System.out.println("count");
+    System.out.println(infiltratorCount);
+    System.out.println(!powerRevealUsed);
+    if (infiltratorCount==Max-5 && !powerBeamUsed) {
+      powerBeamUsed=true;
+      System.out.println("5");}
+    if (infiltratorCount==Max-4 && !powerShieldUsed){
+      powerShieldUsed=true;
+    System.out.println("4");}
+    if (infiltratorCount==Max-3 && !powerStopInfiltratorPowerUsed){
+      powerStopInfiltratorPowerUsed=true;
+      PowerStopInfiltratorPower();
+      System.out.println("3");}
+    if (infiltratorCount==Max-2 && !powerRevealUsed){
+      powerRevealUsed=true;
+      powerRevealTrigger=true;
+      System.out.println("2");}
+    if (infiltratorCount==Max-1 &&!powerSlowUsed){powerSlowUsed=true;
+      System.out.println("1");}
+  }
+
+  private void PowerStopInfiltratorPower(){
+    slowed=false;
+    confused=false;
+    blinded=false;
+  }
+
 
   /**
    * Handle player controls such as movement, interaction and firing the teleporing gun.
@@ -60,6 +97,10 @@ public class Player extends GameEntity {
         confused = false;
         slowed = false;
         teleporterRayCoordinates.setZero();
+      }
+      if (Gdx.input.isKeyPressed(Input.Keys.P)){
+        System.out.println("power");
+        powerOn(world.MAX_INFILTRATORS,world.infiltratorCount);
       }
 
       // Increment Auber's health if in medbay

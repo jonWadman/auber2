@@ -80,6 +80,9 @@ public class GameScreen extends ScreenAdapter {
     renderer.setView(world.camera);
     renderer.render(world.backgroundLayersIds);
 
+    if (world.player.powerRevealTrigger){
+      revealInfiltrators();
+      world.player.powerRevealTrigger=false;}
 
     Batch batch = renderer.getBatch();
     // Iterate over all entities. Perform movement logic and render them.
@@ -115,6 +118,11 @@ public class GameScreen extends ScreenAdapter {
     // Draw the UI
     ui.render(world, screenBatch);
     world.checkForEndState();
+  }
+
+  public void revealInfiltrators(){
+    for (GameEntity entity : world.getEntities()) {
+      if (entity instanceof Infiltrator) {((Infiltrator) entity).exposed=true;}}
   }
 
   @Override

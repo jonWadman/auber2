@@ -41,6 +41,7 @@ public class World {
 
   /** Number of infiltrators added, including defeated ones. */
   public int infiltratorsAddedCount = 0;
+  public Integer infiltratorsDead=4;
 
   private List<GameEntity> entities = new ArrayList<>();
   public List<GameEntity> newEntities = new ArrayList<>();
@@ -53,6 +54,7 @@ public class World {
   public TextureAtlas atlas;
 
   public OrthogonalTiledMapRenderer renderer = new OrthogonalTiledMapRenderer(map);
+
 
   public ArrayList<RectangleMapObject> systems = new ArrayList<>();
   public RectangleMapObject medbay;
@@ -181,7 +183,7 @@ public class World {
   /** The distance an NPC can here the teleporter ray shoot from. */
   public static final float NPC_EAR_STRENGTH = 80f;
   /** The number of NPCs in the game. */
-  public static final int NPC_COUNT = 24;
+  public static final int NPC_COUNT = 12;
 
   public static enum SystemStates {
     WORKING,

@@ -55,25 +55,22 @@ public class Player extends GameEntity {
 
   }
 
-  private void powerOn(Integer Max,Integer infiltratorCount){
-    System.out.println("count");
-    System.out.println(infiltratorCount);
-    System.out.println(!powerRevealUsed);
-    if (infiltratorCount==Max-5 && !powerBeamUsed) {
+  private void powerOn(Integer Max,Integer infiltratorsDead){
+    if (infiltratorsDead==1 && !powerBeamUsed) {
       powerBeamUsed=true;
       System.out.println("5");}
-    if (infiltratorCount==Max-4 && !powerShieldUsed){
+    if (infiltratorsDead==2 && !powerShieldUsed){
       powerShieldUsed=true;
     System.out.println("4");}
-    if (infiltratorCount==Max-3 && !powerStopInfiltratorPowerUsed){
+    if (infiltratorsDead==3 && !powerStopInfiltratorPowerUsed){
       powerStopInfiltratorPowerUsed=true;
       PowerStopInfiltratorPower();
       System.out.println("3");}
-    if (infiltratorCount==Max-2 && !powerRevealUsed){
+    if (infiltratorsDead==4 && !powerRevealUsed){
       powerRevealUsed=true;
       powerRevealTrigger=true;
-      System.out.println("2");}
-    if (infiltratorCount==Max-1 &&!powerSlowUsed){powerSlowUsed=true;
+      System.out.println("reveal");}
+    if (infiltratorsDead==5 &&!powerSlowUsed){powerSlowUsed=true;
       System.out.println("1");}
   }
 
@@ -100,7 +97,7 @@ public class Player extends GameEntity {
       }
       if (Gdx.input.isKeyPressed(Input.Keys.P)){
         System.out.println("power");
-        powerOn(world.MAX_INFILTRATORS,world.infiltratorCount);
+        powerOn(world.MAX_INFILTRATORS,world.infiltratorsDead);
       }
 
       // Increment Auber's health if in medbay

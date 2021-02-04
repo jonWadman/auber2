@@ -65,7 +65,7 @@ public class GameUi {
     screenBatch.begin();
     String power=": None";
     if (world.infiltratorsDead==1 && !world.player.powerBeamUsed) { power=": Super beam";}
-    if (world.infiltratorsDead==2 && !world.player.powerShieldUsed){power=": Sheild"; }
+    if (world.infiltratorsDead==2 && !world.player.powerMaxHealth){power=": Increase Max Health"; }
     if (world.infiltratorsDead==3 && !world.player.powerStopInfiltratorPowerUsed){ power=":  Stop infiltrator powers";}
     if (world.infiltratorsDead==4 && !world.player.powerRevealUsed){power =":  Reveal infiltators";}
     if (world.infiltratorsDead==5 && !world.player.powerSlowUsed){power=": Slow infiltrators";}

@@ -60,8 +60,13 @@ public class Player extends GameEntity {
     this.rayRenderer=renderer;
 
   }
+  /**
+   * Executes the current available power
+   *
+   * @param infiltratorsDead The number of infiltrators killed
+   * */
 
-  private void powerOn(Integer Max,Integer infiltratorsDead){
+  private void powerOn(Integer infiltratorsDead){
     if (infiltratorsDead==1 && !powerBeamUsed) {
       powerBeamUsed=true;
       rayWidth=10f;
@@ -69,22 +74,22 @@ public class Player extends GameEntity {
     if (infiltratorsDead==2 && !powerMaxHealth){
       powerMaxHealth=true;
       maxHealth=1.5f;
-      health=maxHealth;
-    System.out.println("4");}
+      health=maxHealth; }
     if (infiltratorsDead==3 && !powerStopInfiltratorPowerUsed){
       powerStopInfiltratorPowerUsed=true;
-      PowerStopInfiltratorPower();
-      System.out.println("3");}
+      PowerStopInfiltratorPower(); }
     if (infiltratorsDead==4 && !powerRevealUsed){
       powerRevealUsed=true;
       powerRevealTrigger=true;}
-    if (infiltratorsDead==5 &&!powerSlowUsed){powerSlowUsed=true;
+    if (infiltratorsDead==5 &&!powerSlowUsed){
       powerSlowUsed=true;
       powerSlowTrigger=true;}
   }
 
 
-
+  /**
+   * Removes any negative side effects from infiltrator powers
+   */
   private void PowerStopInfiltratorPower(){
     slowed=false;
     confused=false;
@@ -108,7 +113,7 @@ public class Player extends GameEntity {
       }
       if (Gdx.input.isKeyPressed(Input.Keys.P)){
         System.out.println("power");
-        powerOn(world.MAX_INFILTRATORS,world.infiltratorsDead);
+        powerOn(world.infiltratorsDead);
       }
 
       // Increment Auber's health if in medbay

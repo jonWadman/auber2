@@ -46,7 +46,7 @@ public class World {
    * Number of infiltrators added, including defeated ones.
    */
   public int infiltratorsAddedCount = 0;
-  public Integer infiltratorsDead = 2;
+  public Integer infiltratorsDead = 0;
 
   private List<GameEntity> entities = new ArrayList<>();
   public List<GameEntity> newEntities = new ArrayList<>();

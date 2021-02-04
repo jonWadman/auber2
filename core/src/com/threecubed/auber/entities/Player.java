@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -33,21 +34,26 @@ public class Player extends GameEntity {
   public Timer playerTimer = new Timer();
   private Vector2 teleporterRayCoordinates = new Vector2();
 
-  /** Health of Auber - varies between 1 and 0. */
+  /** Health of Auber - varies between maxHealth and 0. */
   public float health = 1;
+  private float maxHealth=1f;
 
   public boolean confused = false;
   public boolean slowed = false;
   public boolean blinded = false;
 
   public boolean powerBeamUsed=false;
-  public boolean powerShieldUsed=false;
+  public boolean powerMaxHealth=false;
   public boolean powerStopInfiltratorPowerUsed=false;
   public boolean powerRevealUsed=false;
   public boolean powerRevealTrigger=false;
   public boolean powerSlowUsed=false;
+  public boolean powerSlowTrigger=false;
 
   private ShapeRenderer rayRenderer;
+  private Float rayWidth=0.5f;
+  private float rayMargin=1f;
+
 
   public Player(float x, float y, Sprite sprite,ShapeRenderer renderer) {
     super(x, y, sprite);
@@ -58,9 +64,12 @@ public class Player extends GameEntity {
   private void powerOn(Integer Max,Integer infiltratorsDead){
     if (infiltratorsDead==1 && !powerBeamUsed) {
       powerBeamUsed=true;
-      System.out.println("5");}
-    if (infiltratorsDead==2 && !powerShieldUsed){
-      powerShieldUsed=true;
+      rayWidth=10f;
+      rayMargin=2f;}
+    if (infiltratorsDead==2 && !powerMaxHealth){
+      powerMaxHealth=true;
+      maxHealth=1.5f;
+      health=maxHealth;
     System.out.println("4");}
     if (infiltratorsDead==3 && !powerStopInfiltratorPowerUsed){
       powerStopInfiltratorPowerUsed=true;
@@ -68,11 +77,13 @@ public class Player extends GameEntity {
       System.out.println("3");}
     if (infiltratorsDead==4 && !powerRevealUsed){
       powerRevealUsed=true;
-      powerRevealTrigger=true;
-      System.out.println("reveal");}
+      powerRevealTrigger=true;}
     if (infiltratorsDead==5 &&!powerSlowUsed){powerSlowUsed=true;
-      System.out.println("1");}
+      powerSlowUsed=true;
+      powerSlowTrigger=true;}
   }
+
+
 
   private void PowerStopInfiltratorPower(){
     slowed=false;
@@ -103,7 +114,7 @@ public class Player extends GameEntity {
       // Increment Auber's health if in medbay
       if (world.medbay.getRectangle().contains(position.x, position.y)) {
         health += World.AUBER_HEAL_RATE;
-        health = Math.min(1f, health);
+        health = Math.min(maxHealth, health);
       }
       // Slow down Auber when they charge their weapon. Should be stopped when weapon half charged,
       // hence the * 2
@@ -232,7 +243,7 @@ public class Player extends GameEntity {
       rayRenderer.setProjectionMatrix(camera.combined);
       rayRenderer.begin(ShapeType.Filled);
       rayRenderer.rectLine(getCenterX(), getCenterY(),
-          teleporterRayCoordinates.x, teleporterRayCoordinates.y, 0.5f,
+          teleporterRayCoordinates.x, teleporterRayCoordinates.y, rayWidth,
           World.rayColorA, World.rayColorB);
       rayRenderer.end();
 
@@ -264,7 +275,9 @@ public class Player extends GameEntity {
       // Check for entity collisions
       for (GameEntity entity : world.getEntities()) {
         if (!(entity instanceof Player)) {
-          if (entity.sprite.getBoundingRectangle().contains(output)) {
+          Rectangle rect=entity.sprite.getBoundingRectangle();
+          Rectangle spriteArea= new Rectangle(rect.x,rect.y,rect.height*rayMargin,rect.width*rayMargin);
+          if (spriteArea.contains(output)) {
             rayIntersected = true;
             if (entity instanceof Npc) {
               Npc npc = (Npc) entity;

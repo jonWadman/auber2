@@ -108,6 +108,10 @@ public class Infiltrator extends Npc {
     }
   }
 
+  public void updateSprite(Sprite newSprite){
+    sprite = newSprite;
+  }
+
   /**
    * Attack a system nearby to the infiltrator.
    * */

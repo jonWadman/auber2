@@ -37,6 +37,7 @@ public class World {
   public int infiltratorCount;
 
   public boolean demoMode = false;
+  public String difficulty = "";
 
   /** Number of infiltrators added, including defeated ones. */
   public int infiltratorsAddedCount = 0;
@@ -150,24 +151,24 @@ public class World {
   }
 
   /** The amount of time it takes for an infiltrator to sabotage a system. */
-  public static final float SYSTEM_BREAK_TIME = 5f;
+  public static float SYSTEM_BREAK_TIME = 5f;
   /** The chance an infiltrator will sabotage after pathfinding to a system. */
-  public static final float SYSTEM_SABOTAGE_CHANCE = 0.6f;
+  public static float SYSTEM_SABOTAGE_CHANCE = 0.6f;
   /** The distance the infiltrator can see. Default: 5 tiles */
-  public static final float INFILTRATOR_SIGHT_RANGE = 80f;
+  public static float INFILTRATOR_SIGHT_RANGE = 80f;
   /** The speed at which infiltrator projectiles should travel. */
-  public static final float INFILTRATOR_PROJECTILE_SPEED = 4f;
-  /** Maximum infiltrators in a full game of Auber (including defated ones). */
-  public static final int MAX_INFILTRATORS = 8;
+  public static float INFILTRATOR_PROJECTILE_SPEED = 4f;
+  /** Maximum infiltrators in a full game of Auber (including defeated ones). */
+  public static int MAX_INFILTRATORS = 8;
   /** The interval at which the infiltrator should attack the player when exposed. */
-  public static final float INFILTRATOR_FIRING_INTERVAL = 5f;
+  public static float INFILTRATOR_FIRING_INTERVAL = 5f;
   /** The damage a projectile should do. */
-  public static final float INFILTRATOR_PROJECTILE_DAMAGE = 0.2f;
+  public static float INFILTRATOR_PROJECTILE_DAMAGE = 0.2f;
   /**
    * Max infiltrators alive at a given point, Should always be greater or equal to
    * {@link World#MAX_INFILTRATORS}.
    * */
-  public static final int MAX_INFILTRATORS_IN_GAME = 3;
+  public static int MAX_INFILTRATORS_IN_GAME = 3;
 
   /** The amount of variance there should be between the speeds of different NPCs. */
   public static final float[] NPC_SPEED_VARIANCE = {0.8f, 1.2f};
@@ -246,15 +247,46 @@ public class World {
    * @param game The game object
    * @param demoMode Whether to run the game in demo mode
    * */
-  public World(AuberGame game, boolean demoMode) {
+  public World(AuberGame game, boolean demoMode, String difficulty) {
     this(game);
     this.demoMode = demoMode;
+    this.difficulty = difficulty;
     if (demoMode) {
       camera.setToOrtho(false, 1920, 1080);
       TiledMapTileLayer layer = ((TiledMapTileLayer) map.getLayers().get(2));
       player.position.x = (layer.getWidth() * layer.getTileWidth()) / 2;
       player.position.y = (layer.getHeight() * layer.getTileHeight()) / 2;
       player.sprite.setColor(1f, 1f, 1f, 0f);
+    }
+    if (difficulty == "easy") {
+      SYSTEM_BREAK_TIME = 6f;
+      SYSTEM_SABOTAGE_CHANCE = 0.5f;
+      INFILTRATOR_SIGHT_RANGE = 80f;
+      INFILTRATOR_PROJECTILE_SPEED = 3.5f;
+      MAX_INFILTRATORS = 3;
+      INFILTRATOR_FIRING_INTERVAL = 5.5f;
+      INFILTRATOR_PROJECTILE_DAMAGE = 0.18f;
+      MAX_INFILTRATORS_IN_GAME = 3;
+    }
+    if (difficulty == "medium") {
+      SYSTEM_BREAK_TIME = 5f;
+      SYSTEM_SABOTAGE_CHANCE = 0.6f;
+      INFILTRATOR_SIGHT_RANGE = 80f;
+      INFILTRATOR_PROJECTILE_SPEED = 4f;
+      MAX_INFILTRATORS = 6;
+      INFILTRATOR_FIRING_INTERVAL = 5f;
+      INFILTRATOR_PROJECTILE_DAMAGE = 0.2f;
+      MAX_INFILTRATORS_IN_GAME = 4;
+    }
+    if (difficulty == "hard") {
+      SYSTEM_BREAK_TIME = 4f;
+      SYSTEM_SABOTAGE_CHANCE = 0.7f;
+      INFILTRATOR_SIGHT_RANGE = 80f;
+      INFILTRATOR_PROJECTILE_SPEED = 4.5f;
+      MAX_INFILTRATORS = 8;
+      INFILTRATOR_FIRING_INTERVAL = 4.5f;
+      INFILTRATOR_PROJECTILE_DAMAGE = 0.22f;
+      MAX_INFILTRATORS_IN_GAME = 5;
     }
   }
 
@@ -428,7 +460,7 @@ public class World {
       if (!demoMode) {
         game.setScreen(new GameOverScreen(game, false));
       } else {
-        game.setScreen(new GameScreen(game, true));
+        game.setScreen(new GameScreen(game, true, difficulty = "medium"));
       }
     } else if (infiltratorCount <= 0) {
       game.setScreen(new GameOverScreen(game, true));

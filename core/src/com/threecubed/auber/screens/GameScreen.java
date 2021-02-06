@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.threecubed.auber.AuberGame;
 import com.threecubed.auber.World;
 import com.threecubed.auber.entities.Civilian;
@@ -40,11 +42,16 @@ public class GameScreen extends ScreenAdapter {
    * @param game The game object
    * @param demoMode Whether the game should run in demo mode
    * */
-  public GameScreen(AuberGame game, boolean demoMode) {
+public GameScreen(AuberGame game, boolean demoMode, String difficulty) {
     this.game = game;
     ui = new GameUi(game);
+    this.world.difficulty = difficulty;
+    difficulty = world.difficulty;
+    world = new World(game, demoMode, difficulty);
 
-    world = new World(game, demoMode);
+    TiledMap map= new TmxMapLoader().load("map.tmx");
+    OrthogonalTiledMapRenderer renderer=new OrthogonalTiledMapRenderer(map);
+    world = new World(game,demoMode, difficulty);
 
     for (int i = 0; i < World.MAX_INFILTRATORS_IN_GAME; i++) {
       world.queueEntityAdd(new Infiltrator(world));

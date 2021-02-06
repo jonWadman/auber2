@@ -246,6 +246,8 @@ public class World {
    *
    * @param game The game object
    * @param demoMode Whether to run the game in demo mode
+   * @param difficulty The level of difficulty the game will be played at.
+   *                   Defaults to medium for demo mode
    * */
   public World(AuberGame game, boolean demoMode, String difficulty) {
     this(game);
@@ -258,6 +260,9 @@ public class World {
       player.position.y = (layer.getHeight() * layer.getTileHeight()) / 2;
       player.sprite.setColor(1f, 1f, 1f, 0f);
     }
+    /**
+     * Different values for constants to change the level of the game's difficulty
+     */
     if (difficulty == "easy") {
       SYSTEM_BREAK_TIME = 6f;
       SYSTEM_SABOTAGE_CHANCE = 0.5f;

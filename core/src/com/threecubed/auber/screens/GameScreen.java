@@ -41,6 +41,8 @@ public class GameScreen extends ScreenAdapter {
    *
    * @param game The game object
    * @param demoMode Whether the game should run in demo mode
+   * @param difficulty The level of difficulty the game will be played at.
+   *    *              Defaults to medium for demo mode
    * */
 public GameScreen(AuberGame game, boolean demoMode, String difficulty) {
     this.game = game;

@@ -44,6 +44,7 @@ public class World {
   public int infiltratorCount;
 
   public boolean demoMode = false;
+  public int difficulty;
 
   /**
    * Number of infiltrators added, including defeated ones.
@@ -180,11 +181,11 @@ public class World {
   /**
    * The amount of time it takes for an infiltrator to sabotage a system.
    */
-  public static final float SYSTEM_BREAK_TIME = 5f;
+  public static float SYSTEM_BREAK_TIME = 5f;
   /**
    * The chance an infiltrator will sabotage after pathfinding to a system.
    */
-  public static final float SYSTEM_SABOTAGE_CHANCE = 0.6f;
+  public static float SYSTEM_SABOTAGE_CHANCE = 0.6f;
   /**
    * The distance the infiltrator can see. Default: 5 tiles
    */
@@ -196,7 +197,7 @@ public class World {
   /**
    * Maximum infiltrators in a full game of Auber (including defated ones).
    */
-  public static final int MAX_INFILTRATORS = 5;
+  public static int MAX_INFILTRATORS = 8;
   /**
    * The interval at which the infiltrator should attack the player when exposed.
    */
@@ -234,7 +235,7 @@ public class World {
   /**
    * The number of NPCs in the game.
    */
-  public static final int NPC_COUNT = 12;
+  public static int NPC_COUNT = 12;
 
   public static enum SystemStates {
     WORKING,
@@ -299,15 +300,41 @@ public class World {
    * @param game     The game object
    * @param demoMode Whether to run the game in demo mode
    */
-  public World(AuberGame game, boolean demoMode) {
+  public World(AuberGame game, int difficulty, boolean demoMode) {
     this(game);
     this.demoMode = demoMode;
+    setDifficulty(difficulty);
     if (demoMode) {
       camera.setToOrtho(false, 1920, 1080);
       TiledMapTileLayer layer = ((TiledMapTileLayer) map.getLayers().get(2));
       player.position.x = (layer.getWidth() * layer.getTileWidth()) / 2;
       player.position.y = (layer.getHeight() * layer.getTileHeight()) / 2;
       player.sprite.setColor(1f, 1f, 1f, 0f);
+    }
+  }
+
+  /**
+   * changes game constants to fit the difficulty
+   * @param difficulty
+   */
+  private void setDifficulty(int difficulty){
+    //easy
+    if (difficulty==0){
+      NPC_COUNT=5;
+      SYSTEM_BREAK_TIME=15f;
+      SYSTEM_SABOTAGE_CHANCE=0.4f;
+    }
+    //medium
+    if (difficulty==1){
+      NPC_COUNT=10;
+      SYSTEM_BREAK_TIME=10f;
+      SYSTEM_SABOTAGE_CHANCE=0.6f;
+    }
+    //hard
+    if (difficulty==2){
+      NPC_COUNT=15;
+      SYSTEM_BREAK_TIME=5f;
+      SYSTEM_SABOTAGE_CHANCE=0.8f;
     }
   }
 
@@ -512,7 +539,7 @@ public class World {
       if (!demoMode) {
         game.setScreen(new GameOverScreen(game, false));
       } else {
-        game.setScreen(new GameScreen(game, true));
+        game.setScreen(new GameScreen(game, difficulty,true));
       }
     } else if (infiltratorCount <= 0) {
       game.setScreen(new GameOverScreen(game, true));

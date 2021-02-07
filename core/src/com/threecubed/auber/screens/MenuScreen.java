@@ -5,6 +5,7 @@ import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -27,6 +28,9 @@ public class MenuScreen extends ScreenAdapter {
   AuberGame game;
 
   Button playButton;
+  Button easyButton;
+  Button mediumButton;
+  Button hardButton;
   Button demoButton;
   OrthogonalTiledMapRenderer renderer;
   Sprite background;
@@ -52,24 +56,61 @@ public class MenuScreen extends ScreenAdapter {
     Runnable onPlayClick = new Runnable() {
       @Override
       public void run() {
-        game.setScreen(new GameScreen(game, false));
+        game.setScreen(new GameScreen(game, 0,false));
       }
     };
 
-    playButton = new Button(
-        new Vector2(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2),
-        1f, game.atlas.createSprite("playButton"), game, onPlayClick);
+    Runnable onEasyClick = new Runnable() {
+      @Override
+      public void run() {
+        game.setScreen(new GameScreen(game, 0,false));
+      }
+    };
+
+    Runnable onMediumClick = new Runnable() {
+      @Override
+      public void run() {
+        game.setScreen(new GameScreen(game, 1,false));
+      }
+    };
+
+    Runnable onHardClick = new Runnable() {
+      @Override
+      public void run() {
+        game.setScreen(new GameScreen(game, 2,false));
+      }
+    };
+
+
+
+    Sprite easySprite=new Sprite(new Texture(Gdx.files.internal("easy.png")));
+    Sprite mediumSprite=new Sprite(new Texture(Gdx.files.internal("medium.png")));
+    Sprite hardSprite=new Sprite(new Texture(Gdx.files.internal("hard.png")));
+    Sprite demoSprite=new Sprite(new Texture(Gdx.files.internal("demo.png")));
+
+    easyButton = new Button(
+            new Vector2(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2+100),
+            1f, easySprite, game, onEasyClick);
+
+    mediumButton = new Button(
+            new Vector2(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2-50f),
+            1f, mediumSprite, game, onMediumClick);
+
+    hardButton = new Button(
+            new Vector2(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2-200f),
+            1f, hardSprite, game, onHardClick);
+
 
     Runnable onDemoClick = new Runnable() {
       @Override
       public void run() {
-        game.setScreen(new GameScreen(game, true));
+        game.setScreen(new GameScreen(game,0, true));
       }
     };
 
     demoButton = new Button(
-        new Vector2(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 150f),
-        1f, game.atlas.createSprite("demoButton"), game, onDemoClick);
+        new Vector2(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 350f),
+        1f,demoSprite, game, onDemoClick);
   }
 
   @Override
@@ -79,7 +120,7 @@ public class MenuScreen extends ScreenAdapter {
       Gdx.graphics.setFullscreenMode(currentDisplayMode);
     }
     if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-      game.setScreen(new GameScreen(game, true));
+      game.setScreen(new GameScreen(game, 0,true));
     }
 
     // Set the background color
@@ -98,7 +139,10 @@ public class MenuScreen extends ScreenAdapter {
     title.setPosition(0f, 550f);
     title.draw(spriteBatch);
 
-    playButton.render(spriteBatch);
+    //playButton.render(spriteBatch);
+    easyButton.render(spriteBatch);
+    mediumButton.render(spriteBatch);
+    hardButton.render(spriteBatch);
     demoButton.render(spriteBatch);
 
     spriteBatch.end();

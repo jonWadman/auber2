@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.threecubed.auber.pathfinding.NavigationMeshTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2021-02-07T13:22:37" hostname="LAPTOP-2C2PBR86" time="0.004">
+<testsuite name="com.threecubed.auber.pathfinding.NavigationMeshTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2021-02-07T15:37:38" hostname="LAPTOP-2C2PBR86" time="0.006">
   <properties/>
-  <testcase name="getWorldCoordinates" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.002"/>
+  <testcase name="getWorldCoordinates" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.004"/>
   <testcase name="getEuclidianDistance" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.0"/>
-  <testcase name="getTilemapCoordinates" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.001"/>
+  <testcase name="getTilemapCoordinates" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.0"/>
   <testcase name="cellAccessible" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.0"/>
   <testcase name="generateWorldPathToPoint" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.0"/>
   <testcase name="generateTilemapPathToPoint" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.0"/>
   <testcase name="testGetEuclidianDistance" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.0"/>
-  <testcase name="getSuccessorNodes" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.001"/>
+  <testcase name="getSuccessorNodes" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.0"/>
   <testcase name="getFurthestPointFromEntity" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.0"/>
   <testcase name="setCell" classname="com.threecubed.auber.pathfinding.NavigationMeshTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>

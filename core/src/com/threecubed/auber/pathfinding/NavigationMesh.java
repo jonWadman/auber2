@@ -293,13 +293,13 @@ public class NavigationMesh {
   }
 
   private boolean checkInvalidCoordiantes(int x, int y) {
-    return checkInvalidCoordiantes((float) x,(float) y);
-  }
-
-  private boolean checkInvalidCoordiantes(float x, float y) {
     if(x<0||y<0||y>mesh.length-1||x>mesh[0].length-1){
       return true;
     }
     return false;
+  }
+
+  private boolean checkInvalidCoordiantes(float x, float y) {
+    return checkInvalidCoordiantes((int) Math.floor(x / navigationLayer.getTileWidth()),(int) Math.floor(y / navigationLayer.getTileHeight()));
   }
 }

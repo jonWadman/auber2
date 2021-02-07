@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.threecubed.auber.entities.GameEntityTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2021-02-01T18:12:46" hostname="BitCruncher" time="0.133">
+<testsuite name="com.threecubed.auber.entities.GameEntityTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2021-02-07T17:42:53" hostname="BitCruncher" time="0.135">
   <properties/>
-  <testcase name="getCenter" classname="com.threecubed.auber.entities.GameEntityTest" time="0.052"/>
+  <testcase name="getCenter" classname="com.threecubed.auber.entities.GameEntityTest" time="0.053"/>
   <testcase name="getCenterX" classname="com.threecubed.auber.entities.GameEntityTest" time="0.025"/>
-  <testcase name="getCenterY" classname="com.threecubed.auber.entities.GameEntityTest" time="0.024"/>
+  <testcase name="getCenterY" classname="com.threecubed.auber.entities.GameEntityTest" time="0.025"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

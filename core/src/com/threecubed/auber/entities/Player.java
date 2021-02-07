@@ -36,7 +36,7 @@ public class Player extends GameEntity {
 
   /** Health of Auber - varies between maxHealth and 0. */
   public float health = 1;
-  private float maxHealth=1f;
+  public float maxHealth=1f;
 
   public boolean confused = false;
   public boolean slowed = false;
@@ -113,7 +113,7 @@ public class Player extends GameEntity {
       }
       if (Gdx.input.isKeyPressed(Input.Keys.P)){
         System.out.println("power");
-        powerOn(world.infiltratorsDead);
+        powerOn(world.infiltratorsCaught);
       }
 
       // Increment Auber's health if in medbay

@@ -50,7 +50,7 @@ public class World {
    * Number of infiltrators added, including defeated ones.
    */
   public int infiltratorsAddedCount = 0;
-  public Integer infiltratorsDead = 0;
+  public Integer infiltratorsCaught = 0;
 
   private List<GameEntity> entities = new ArrayList<>();
   public List<GameEntity> newEntities = new ArrayList<>();
@@ -550,22 +550,39 @@ public class World {
   public void save(){
     System.out.println("save");
     Preferences playerPref = Gdx.app.getPreferences("playerPref");
-    Preferences infilPref = Gdx.app.getPreferences("infilPref");
-    Preferences civilPref = Gdx.app.getPreferences("civilPref");
     Preferences worldPref= Gdx.app.getPreferences("worldPref");
     Preferences sysPref=Gdx.app.getPreferences("sysPref");
 
     playerPref.clear();
-    infilPref.clear();
-    civilPref.clear();
     worldPref.clear();
     sysPref.clear();
 
     playerPref.putFloat("playerx",player.position.x);
     playerPref.putFloat("playery",player.position.y);
+    playerPref.putFloat("health",player.health);
+    playerPref.putFloat("maxhealth",player.maxHealth);
 
     worldPref.putInteger("infiltratorsAddedCount",infiltratorsAddedCount);
+    worldPref.putInteger("infiltratorsCaught",infiltratorsCaught);
 
+
+    for (RectangleMapObject system: systems){
+      String location=String.valueOf(system.getRectangle().getX())+String.valueOf(system.getRectangle().getY());
+      sysPref.putBoolean(location,true);
+    }
+
+    playerPref.flush();
+    worldPref.flush();
+    sysPref.flush();
+
+    saveEntities();
+  }
+
+  private void saveEntities(){
+    Preferences infilPref = Gdx.app.getPreferences("infilPref");
+    Preferences civilPref = Gdx.app.getPreferences("civilPref");
+    infilPref.clear();
+    civilPref.clear();
     int infilCount=-1;
     int civilianCount=-1;
     for (GameEntity entity: entities){
@@ -579,31 +596,59 @@ public class World {
         civilPref.putFloat(String.valueOf(civilianCount)+"x",entity.position.x);
         civilPref.putFloat(String.valueOf(civilianCount)+"y",entity.position.y);
       }
-
-    }
-    for (RectangleMapObject system: systems){
-      String location=String.valueOf(system.getRectangle().getX())+String.valueOf(system.getRectangle().getY());
-      sysPref.putBoolean(location,true);
     }
 
-    playerPref.flush();
     infilPref.flush();
     civilPref.flush();
-    worldPref.flush();
-    sysPref.flush();
-    System.out.println(infilPref.get());
+
   }
+  /**
+   * loads the save data
+   */
   public void load(){
-    Preferences playerP = Gdx.app.getPreferences("playerPref");
-    Preferences infilP = Gdx.app.getPreferences("infilPref");
-    Preferences civilPref = Gdx.app.getPreferences("civilPref");
+
     Preferences worldPref = Gdx.app.getPreferences("worldPref");
-
     infiltratorsAddedCount= worldPref.getInteger("infiltratorsAddedCount");
-
+    infiltratorsCaught=worldPref.getInteger("infiltratorsCaught");
     entities.clear();
-    queueEntityAdd(player);
+    loadPlayer();
+    loadCivilians();
+    loadInfiltrators();
+
+
+
+
+  }
+
+  /**
+   * loads player into game from last save
+   */
+  private void loadPlayer(){
+    Preferences playerP = Gdx.app.getPreferences("playerPref");
     player.position.set(playerP.getFloat("playerx"),playerP.getFloat("playery"));
+    player.health=playerP.getFloat("health");
+    player.maxHealth=playerP.getFloat("maxhealth");
+    queueEntityAdd(player);
+  }
+
+  /**
+   * loads the civilians from save
+   */
+  private void loadCivilians(){
+    Preferences civilPref = Gdx.app.getPreferences("civilPref");
+    for (int i = 0 ; i<=civilPref.get().size()/2;i++){
+      float x=civilPref.getFloat(String.valueOf(i)+"x");
+      float y=civilPref.getFloat(String.valueOf(i)+"y");
+      Civilian civil=new Civilian(this);
+      queueEntityAdd(civil);
+    }
+  }
+
+  /**
+   * loads the infiltrators from save
+   */
+  private void loadInfiltrators(){
+    Preferences infilP = Gdx.app.getPreferences("infilPref");
     for (int i = 0 ; i<=infilP.get().size()/2;i++){
       float x=infilP.getFloat(String.valueOf(i)+"x");
       float y=infilP.getFloat(String.valueOf(i)+"y");
@@ -611,19 +656,6 @@ public class World {
       queueEntityAdd(infil);
 
     }
-   for (int i = 0 ; i<=civilPref.get().size()/2;i++){
-      float x=civilPref.getFloat(String.valueOf(i)+"x");
-      float y=civilPref.getFloat(String.valueOf(i)+"y");
-      Civilian civil=new Civilian(this);
-      queueEntityAdd(civil);
-
-
-
-    }
-
-
-
-
 
   }
 

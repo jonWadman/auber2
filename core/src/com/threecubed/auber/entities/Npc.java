@@ -32,7 +32,7 @@ public abstract class Npc extends GameEntity {
 
   private static String[] textureNames = {"alienA", "alienB", "alienC"};
 
-  protected States state = States.IDLE;
+  public States state = States.IDLE;
 
   public enum States {
     IDLE,
@@ -186,7 +186,7 @@ public abstract class Npc extends GameEntity {
    * @param world The game world
    * */
 
-  protected void navigateToRandomSystem(World world) {
+  public void navigateToRandomSystem(World world) {
     if (!world.systems.isEmpty()) {
       state = States.NAVIGATING;
       RectangleMapObject system = world.systems.get(
@@ -224,7 +224,7 @@ public abstract class Npc extends GameEntity {
         );
   }
 
-  protected void idleForGivenTime(final World world, float seconds) {
+  public void idleForGivenTime(final World world, float seconds) {
     npcTimer.scheduleTask(new Task() {
       @Override
       public void run() {

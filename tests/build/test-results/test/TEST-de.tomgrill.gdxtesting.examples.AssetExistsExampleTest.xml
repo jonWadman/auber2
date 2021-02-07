@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="de.tomgrill.gdxtesting.examples.AssetExistsExampleTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-02-02T18:51:06" hostname="LAPTOP-2C2PBR86" time="0.0">
+<testsuite name="de.tomgrill.gdxtesting.examples.AssetExistsExampleTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-02-05T14:09:26" hostname="LAPTOP-2C2PBR86" time="0.001">
   <properties/>
-  <testcase name="badlogicLogoFileExists" classname="de.tomgrill.gdxtesting.examples.AssetExistsExampleTest" time="0.0"/>
+  <testcase name="badlogicLogoFileExists" classname="de.tomgrill.gdxtesting.examples.AssetExistsExampleTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

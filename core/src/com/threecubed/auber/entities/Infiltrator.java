@@ -33,6 +33,7 @@ public class Infiltrator extends Npc {
     super(x, y, world);
     navigateToRandomSystem(world);
 
+
   }
 
   /**

@@ -66,7 +66,7 @@ public class Player extends GameEntity {
    * @param infiltratorsDead The number of infiltrators killed
    * */
 
-  private void powerOn(Integer infiltratorsDead){
+  public void powerOn(Integer infiltratorsDead){
     if (infiltratorsDead==1 && !powerBeamUsed) {
       powerBeamUsed=true;
       rayWidth=10f;
@@ -90,7 +90,7 @@ public class Player extends GameEntity {
   /**
    * Removes any negative side effects from infiltrator powers
    */
-  private void PowerStopInfiltratorPower(){
+  public void PowerStopInfiltratorPower(){
     slowed=false;
     confused=false;
     blinded=false;
@@ -133,7 +133,7 @@ public class Player extends GameEntity {
       if (confused) {
         velocity.set(-velocity.x, -velocity.y);
       }
-
+      //Movement
       if (Gdx.input.isKeyPressed(Input.Keys.W)) {
         velocity.y = Math.min(velocity.y + speed - speedModifier, maxSpeed);
       }
@@ -146,6 +146,7 @@ public class Player extends GameEntity {
       if (Gdx.input.isKeyPressed(Input.Keys.D)) {
         velocity.x = Math.min(velocity.x + speed - speedModifier, maxSpeed);
       }
+
 
 
       if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && teleporterRayCoordinates.isZero()) {

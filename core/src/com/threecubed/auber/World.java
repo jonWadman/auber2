@@ -1,5 +1,8 @@
 package com.threecubed.auber;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -14,16 +17,16 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.threecubed.auber.entities.GameEntity;
-import com.threecubed.auber.entities.Infiltrator;
-import com.threecubed.auber.entities.Npc;
-import com.threecubed.auber.entities.Player;
+import com.badlogic.gdx.utils.Json;
+import com.threecubed.auber.entities.*;
 import com.threecubed.auber.pathfinding.NavigationMesh;
 import com.threecubed.auber.screens.GameOverScreen;
 import com.threecubed.auber.screens.GameScreen;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static com.badlogic.gdx.utils.JsonWriter.OutputType.json;
 
 
 /**
@@ -514,6 +517,79 @@ public class World {
     } else if (infiltratorCount <= 0) {
       game.setScreen(new GameOverScreen(game, true));
     }
+  }
+
+  public void save(){
+    System.out.println("save");
+    Preferences playerPref = Gdx.app.getPreferences("playerPref");
+    Preferences infilPref = Gdx.app.getPreferences("infilPref");
+    Preferences civilPref = Gdx.app.getPreferences("civilPref");
+    Preferences worldPref= Gdx.app.getPreferences("worldPref");
+
+    playerPref.clear();
+    infilPref.clear();
+    civilPref.clear();
+    worldPref.clear();
+
+    playerPref.putFloat("playerx",player.position.x);
+    playerPref.putFloat("playery",player.position.y);
+
+    worldPref.putInteger("infiltratorsAddedCount",infiltratorsAddedCount);
+
+    int infilCount=-1;
+    int civilianCount=-1;
+    for (GameEntity entity: entities){
+      if (entity instanceof Infiltrator){
+        infilCount+=1;
+        infilPref.putFloat(String.valueOf(infiltratorCount)+"x",entity.position.x);
+        infilPref.putFloat(String.valueOf(infiltratorCount)+"y",entity.position.y);
+      }
+      if (entity instanceof Civilian){
+        civilianCount+=1;
+        civilPref.putFloat(String.valueOf(civilianCount)+"x",entity.position.x);
+        civilPref.putFloat(String.valueOf(civilianCount)+"y",entity.position.y);
+      }
+
+    }
+
+
+    playerPref.flush();
+    infilPref.flush();
+    civilPref.flush();
+    System.out.println(infilPref.get());
+  }
+  public void load(){
+    Preferences playerP = Gdx.app.getPreferences("playerPref");
+    Preferences infilP = Gdx.app.getPreferences("infilPref");
+    Preferences civilPref = Gdx.app.getPreferences("civilPref");
+    Preferences worldPref = Gdx.app.getPreferences("worldPref");
+
+    infiltratorsAddedCount= worldPref.getInteger("infiltratorsAddedCount");
+
+    entities.clear();
+    queueEntityAdd(player);
+    player.position.set(playerP.getFloat("playerx"),playerP.getFloat("playery"));
+    for (int i = 0 ; i<=infilP.get().size()/2;i++){
+      float x=infilP.getFloat(String.valueOf(i)+"x");
+      float y=infilP.getFloat(String.valueOf(i)+"y");
+      Infiltrator infil =new Infiltrator(this);
+      queueEntityAdd(infil);
+
+    }
+   for (int i = 0 ; i<=civilPref.get().size()/2;i++){
+      float x=civilPref.getFloat(String.valueOf(i)+"x");
+      float y=civilPref.getFloat(String.valueOf(i)+"y");
+      Civilian civil=new Civilian(this);
+      queueEntityAdd(civil);
+
+
+
+    }
+
+
+
+
+
   }
 
 

@@ -81,6 +81,7 @@ public class Infiltrator extends Npc {
         Rectangle boundingBox = system.getRectangle();
         world.updateSystemState(boundingBox.x, boundingBox.y, World.SystemStates.WORKING);
       }
+
     }
 
     if (!exposed) {

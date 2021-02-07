@@ -517,6 +517,7 @@ public class World {
     } else if (infiltratorCount <= 0) {
       game.setScreen(new GameOverScreen(game, true));
     }
+
   }
 
   public void save(){
@@ -525,11 +526,13 @@ public class World {
     Preferences infilPref = Gdx.app.getPreferences("infilPref");
     Preferences civilPref = Gdx.app.getPreferences("civilPref");
     Preferences worldPref= Gdx.app.getPreferences("worldPref");
+    Preferences sysPref=Gdx.app.getPreferences("sysPref");
 
     playerPref.clear();
     infilPref.clear();
     civilPref.clear();
     worldPref.clear();
+    sysPref.clear();
 
     playerPref.putFloat("playerx",player.position.x);
     playerPref.putFloat("playery",player.position.y);
@@ -551,11 +554,16 @@ public class World {
       }
 
     }
-
+    for (RectangleMapObject system: systems){
+      String location=String.valueOf(system.getRectangle().getX())+String.valueOf(system.getRectangle().getY());
+      sysPref.putBoolean(location,true);
+    }
 
     playerPref.flush();
     infilPref.flush();
     civilPref.flush();
+    worldPref.flush();
+    sysPref.flush();
     System.out.println(infilPref.get());
   }
   public void load(){

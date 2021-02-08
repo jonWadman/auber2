@@ -61,6 +61,7 @@ public class GameUi {
     drawSpecialPower(world,screenBatch);
 
   }
+  //NEW CODE
   /**
    * Draw the current special power
    *

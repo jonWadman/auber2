@@ -60,6 +60,7 @@ public class Player extends GameEntity {
     this.rayRenderer=renderer;
 
   }
+  //NEW CODE
   /**
    * Executes the current available power
    *
@@ -86,7 +87,7 @@ public class Player extends GameEntity {
       powerSlowTrigger=true;}
   }
 
-
+//NEW CODE
   /**
    * Removes any negative side effects from infiltrator powers
    */

@@ -38,6 +38,7 @@ public class MenuScreen extends ScreenAdapter {
   Sprite title;
   SpriteBatch spriteBatch;
 
+//EDITED CODE- difficulty levels added
   /**
    * Instantiate the screen with the {@link AuberGame} object. Set the title and button up to be
    * rendered.

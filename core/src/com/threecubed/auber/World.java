@@ -546,7 +546,10 @@ public class World {
     }
 
   }
-
+//NEW CODE
+  /**
+   * Saves all game data to preferences
+   */
   public void save(){
     System.out.println("save");
     Preferences playerPref = Gdx.app.getPreferences("playerPref");
@@ -578,6 +581,9 @@ public class World {
     saveEntities();
   }
 
+  /**
+   * saves information about infiltrators and civilians
+   */
   private void saveEntities(){
     Preferences infilPref = Gdx.app.getPreferences("infilPref");
     Preferences civilPref = Gdx.app.getPreferences("civilPref");
@@ -606,7 +612,6 @@ public class World {
    * loads the save data
    */
   public void load(){
-
     Preferences worldPref = Gdx.app.getPreferences("worldPref");
     infiltratorsAddedCount= worldPref.getInteger("infiltratorsAddedCount");
     infiltratorsCaught=worldPref.getInteger("infiltratorsCaught");
@@ -614,10 +619,6 @@ public class World {
     loadPlayer();
     loadCivilians();
     loadInfiltrators();
-
-
-
-
   }
 
   /**

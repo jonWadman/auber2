@@ -33,6 +33,7 @@ public class Infiltrator extends Npc {
     super(x, y, world);
     navigateToRandomSystem(world);
 
+
   }
 
   /**
@@ -80,6 +81,7 @@ public class Infiltrator extends Npc {
         Rectangle boundingBox = system.getRectangle();
         world.updateSystemState(boundingBox.x, boundingBox.y, World.SystemStates.WORKING);
       }
+
     }
 
     if (!exposed) {
@@ -99,12 +101,17 @@ public class Infiltrator extends Npc {
         }
       }, World.INFILTRATOR_FIRING_INTERVAL, World.INFILTRATOR_FIRING_INTERVAL);
     } else {
+      world.infiltratorsDead+=1;
       position.x = Utils.randomFloatInRange(world.randomNumberGenerator,
           World.BRIG_BOUNDS[0][0], World.BRIG_BOUNDS[1][0]);
       position.y = Utils.randomFloatInRange(world.randomNumberGenerator,
           World.BRIG_BOUNDS[0][1], World.BRIG_BOUNDS[1][1]);
       aiEnabled = false;    
     }
+  }
+
+  public void updateSprite(Sprite newSprite){
+    sprite = newSprite;
   }
 
   /**

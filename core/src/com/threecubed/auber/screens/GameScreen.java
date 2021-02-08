@@ -2,6 +2,7 @@ package com.threecubed.auber.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -35,19 +36,19 @@ public class GameScreen extends ScreenAdapter {
   GameUi ui;
 
   int workingSystems = 0;
-
+  private Boolean loadPress=false;
   /**
    * Initialise the game screen with the {@link AuberGame} object and add a few entities.
    *
    * @param game The game object
    * @param demoMode Whether the game should run in demo mode
    * */
-  public GameScreen(AuberGame game, boolean demoMode) {
+  public GameScreen(AuberGame game, int difficulty, boolean demoMode) {
     this.game = game;
     ui = new GameUi(game);
     TiledMap map= new TmxMapLoader().load("map.tmx");
     OrthogonalTiledMapRenderer renderer=new OrthogonalTiledMapRenderer(map);
-    world = new World(game,demoMode);
+    world = new World(game,difficulty,demoMode);
 
     for (int i = 0; i < World.MAX_INFILTRATORS_IN_GAME; i++) {
       world.queueEntityAdd(new Infiltrator(world));
@@ -65,6 +66,9 @@ public class GameScreen extends ScreenAdapter {
     if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
       game.setScreen(new MenuScreen(game));
     }
+    //save load
+    if (Gdx.input.isKeyPressed(Input.Keys.K)) {world.save();}
+    if (Gdx.input.isKeyPressed(Input.Keys.L)) { world.load();}
     // Add any queued entities
     world.updateEntities();
 
@@ -80,6 +84,7 @@ public class GameScreen extends ScreenAdapter {
     renderer.setView(world.camera);
     renderer.render(world.backgroundLayersIds);
 
+    world.usePowers();
 
     Batch batch = renderer.getBatch();
     // Iterate over all entities. Perform movement logic and render them.
@@ -116,6 +121,11 @@ public class GameScreen extends ScreenAdapter {
     ui.render(world, screenBatch);
     world.checkForEndState();
   }
+
+
+
+
+
 
   @Override
   public void dispose() {

@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -33,19 +34,68 @@ public class Player extends GameEntity {
   public Timer playerTimer = new Timer();
   private Vector2 teleporterRayCoordinates = new Vector2();
 
-  /** Health of Auber - varies between 1 and 0. */
+  /** Health of Auber - varies between maxHealth and 0. */
   public float health = 1;
+  private float maxHealth=1f;
 
   public boolean confused = false;
   public boolean slowed = false;
   public boolean blinded = false;
 
+  public boolean powerBeamUsed=false;
+  public boolean powerMaxHealth=false;
+  public boolean powerStopInfiltratorPowerUsed=false;
+  public boolean powerRevealUsed=false;
+  public boolean powerRevealTrigger=false;
+  public boolean powerSlowUsed=false;
+  public boolean powerSlowTrigger=false;
+
   private ShapeRenderer rayRenderer;
+  private Float rayWidth=0.5f;
+  private float rayMargin=1f;
+
 
   public Player(float x, float y, Sprite sprite,ShapeRenderer renderer) {
     super(x, y, sprite);
     this.rayRenderer=renderer;
+
   }
+  /**
+   * Executes the current available power
+   *
+   * @param infiltratorsDead The number of infiltrators killed
+   * */
+
+  public void powerOn(Integer infiltratorsDead){
+    if (infiltratorsDead==1 && !powerBeamUsed) {
+      powerBeamUsed=true;
+      rayWidth=10f;
+      rayMargin=2f;}
+    if (infiltratorsDead==2 && !powerMaxHealth){
+      powerMaxHealth=true;
+      maxHealth=1.5f;
+      health=maxHealth; }
+    if (infiltratorsDead==3 && !powerStopInfiltratorPowerUsed){
+      powerStopInfiltratorPowerUsed=true;
+      PowerStopInfiltratorPower(); }
+    if (infiltratorsDead==4 && !powerRevealUsed){
+      powerRevealUsed=true;
+      powerRevealTrigger=true;}
+    if (infiltratorsDead==5 &&!powerSlowUsed){
+      powerSlowUsed=true;
+      powerSlowTrigger=true;}
+  }
+
+
+  /**
+   * Removes any negative side effects from infiltrator powers
+   */
+  public void PowerStopInfiltratorPower(){
+    slowed=false;
+    confused=false;
+    blinded=false;
+  }
+
 
   /**
    * Handle player controls such as movement, interaction and firing the teleporing gun.
@@ -61,11 +111,15 @@ public class Player extends GameEntity {
         slowed = false;
         teleporterRayCoordinates.setZero();
       }
+      if (Gdx.input.isKeyPressed(Input.Keys.P)){
+        System.out.println("power");
+        powerOn(world.infiltratorsDead);
+      }
 
       // Increment Auber's health if in medbay
       if (world.medbay.getRectangle().contains(position.x, position.y)) {
         health += World.AUBER_HEAL_RATE;
-        health = Math.min(1f, health);
+        health = Math.min(maxHealth, health);
       }
       // Slow down Auber when they charge their weapon. Should be stopped when weapon half charged,
       // hence the * 2
@@ -79,7 +133,7 @@ public class Player extends GameEntity {
       if (confused) {
         velocity.set(-velocity.x, -velocity.y);
       }
-
+      //Movement
       if (Gdx.input.isKeyPressed(Input.Keys.W)) {
         velocity.y = Math.min(velocity.y + speed - speedModifier, maxSpeed);
       }
@@ -92,6 +146,7 @@ public class Player extends GameEntity {
       if (Gdx.input.isKeyPressed(Input.Keys.D)) {
         velocity.x = Math.min(velocity.x + speed - speedModifier, maxSpeed);
       }
+
 
 
       if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && teleporterRayCoordinates.isZero()) {
@@ -194,7 +249,7 @@ public class Player extends GameEntity {
       rayRenderer.setProjectionMatrix(camera.combined);
       rayRenderer.begin(ShapeType.Filled);
       rayRenderer.rectLine(getCenterX(), getCenterY(),
-          teleporterRayCoordinates.x, teleporterRayCoordinates.y, 0.5f,
+          teleporterRayCoordinates.x, teleporterRayCoordinates.y, rayWidth,
           World.rayColorA, World.rayColorB);
       rayRenderer.end();
 
@@ -226,7 +281,9 @@ public class Player extends GameEntity {
       // Check for entity collisions
       for (GameEntity entity : world.getEntities()) {
         if (!(entity instanceof Player)) {
-          if (entity.sprite.getBoundingRectangle().contains(output)) {
+          Rectangle rect=entity.sprite.getBoundingRectangle();
+          Rectangle spriteArea= new Rectangle(rect.x,rect.y,rect.height*rayMargin,rect.width*rayMargin);
+          if (spriteArea.contains(output)) {
             rayIntersected = true;
             if (entity instanceof Npc) {
               Npc npc = (Npc) entity;

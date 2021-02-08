@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.threecubed.auber.UtilsTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2021-02-07T17:42:53" hostname="BitCruncher" time="0.001">
+<testsuite name="com.threecubed.auber.UtilsTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2021-02-08T03:30:37" hostname="BitCruncher" time="0.0">
   <properties/>
-  <testcase name="randomFloatInRange" classname="com.threecubed.auber.UtilsTest" time="0.001"/>
+  <testcase name="randomFloatInRange" classname="com.threecubed.auber.UtilsTest" time="0.0"/>
   <testcase name="randomIntInRange" classname="com.threecubed.auber.UtilsTest" time="0.0"/>
   <testcase name="randomListItem" classname="com.threecubed.auber.UtilsTest" time="0.0"/>
   <testcase name="getMouseCoordinates" classname="com.threecubed.auber.UtilsTest" time="0.0"/>

@@ -33,7 +33,7 @@ import java.io.File;
 
 @RunWith(GdxTestRunner.class)
 public class GameEntityTest {
-    
+
 
     @Test
     public void getCenterX() {
@@ -52,6 +52,7 @@ public class GameEntityTest {
         Sprite sprite = atlas.createSprite("player");
         Player player = new Player(0, 0, sprite, renderer);
         Assert.assertEquals(player.getCenterY(), player.sprite.getHeight() / 2,0.001);
+
     }
 
     @Test

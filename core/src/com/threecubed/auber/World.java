@@ -1,5 +1,8 @@
 package com.threecubed.auber;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -13,14 +16,17 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.threecubed.auber.entities.GameEntity;
-import com.threecubed.auber.entities.Player;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
+import com.threecubed.auber.entities.*;
 import com.threecubed.auber.pathfinding.NavigationMesh;
 import com.threecubed.auber.screens.GameOverScreen;
 import com.threecubed.auber.screens.GameScreen;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static com.badlogic.gdx.utils.JsonWriter.OutputType.json;
 
 
 /**
@@ -38,9 +44,13 @@ public class World {
   public int infiltratorCount;
 
   public boolean demoMode = false;
+  public int difficulty;
 
-  /** Number of infiltrators added, including defeated ones. */
+  /**
+   * Number of infiltrators added, including defeated ones.
+   */
   public int infiltratorsAddedCount = 0;
+  public Integer infiltratorsDead = 0;
 
   private List<GameEntity> entities = new ArrayList<>();
   public List<GameEntity> newEntities = new ArrayList<>();
@@ -54,6 +64,7 @@ public class World {
 
   public OrthogonalTiledMapRenderer renderer = new OrthogonalTiledMapRenderer(map);
 
+
   public ArrayList<RectangleMapObject> systems = new ArrayList<>();
   public RectangleMapObject medbay;
   public ArrayList<float[]> spawnLocations = new ArrayList<>();
@@ -62,42 +73,60 @@ public class World {
 
   // ------------------NAVIGATION----------------
   public final NavigationMesh navigationMesh = new NavigationMesh(
-      (TiledMapTileLayer) map.getLayers().get("navigation_layer")
-      );
+          (TiledMapTileLayer) map.getLayers().get("navigation_layer")
+  );
   public ArrayList<float[]> fleePoints = new ArrayList<>();
 
-  /** Coordinates for the bottom left and top right tiles of the brig. */
+  /**
+   * Coordinates for the bottom left and top right tiles of the brig.
+   */
   public static final float[][] BRIG_BOUNDS = {{240f, 608f}, {352f, 640f}};
-  /** Coordinates for the medbay teleporter. */
+  /**
+   * Coordinates for the medbay teleporter.
+   */
   public static final float[] MEDBAY_COORDINATES = {96f, 640f};
 
   // --------------------AUBER-------------------
   public float auberTeleporterCharge = 0f;
-  /** The rate at which the teleporter ray charges. */
+  /**
+   * The rate at which the teleporter ray charges.
+   */
   public static final float AUBER_CHARGE_RATE = 0.05f;
-  /** The time the ray should visibly render for. */
+  /**
+   * The time the ray should visibly render for.
+   */
   public static final float AUBER_RAY_TIME = 0.25f;
-  /** The time a debuff should last for (with the exception of blindness). */
+  /**
+   * The time a debuff should last for (with the exception of blindness).
+   */
   public static final float AUBER_DEBUFF_TIME = 5f;
-  /** The rate at which auber should heal. */
+  /**
+   * The rate at which auber should heal.
+   */
   public static final float AUBER_HEAL_RATE = 0.005f;
   public static final Color rayColorA = new Color(0.106f, 0.71f, 0.714f, 1f);
   public static final Color rayColorB = new Color(0.212f, 1f, 1f, 0.7f);
 
   // ------------------RENDERING-----------------
-  /** IDs of layers that should be rendered behind entities. */
+  /**
+   * IDs of layers that should be rendered behind entities.
+   */
   public final int[] backgroundLayersIds = {
-    map.getLayers().getIndex("background_layer"),
-    };
+          map.getLayers().getIndex("background_layer"),
+  };
 
-  /** IDs of layers that should be rendered infront of entities. */
+  /**
+   * IDs of layers that should be rendered infront of entities.
+   */
   public final int[] foregroundLayersIds = {
-    map.getLayers().getIndex("foreground_layer"),
-    map.getLayers().getIndex("collision_layer")
-    };
+          map.getLayers().getIndex("foreground_layer"),
+          map.getLayers().getIndex("collision_layer")
+  };
 
 
-  /** An enum containing information about all dynamic/frequently accessed tiles. */
+  /**
+   * An enum containing information about all dynamic/frequently accessed tiles.
+   */
   public static enum Tiles {
     WALL_SYSTEM(38),
     STANDALONE_SYSTEM(62),
@@ -115,7 +144,6 @@ public class World {
     FLEE_POINT(57);
 
 
-
     public final int tileId;
 
     Tiles(int tileId) {
@@ -126,7 +154,7 @@ public class World {
      * Return a cell object for a given tile type via its tileId.
      *
      * @return A cell object for the given tile ID
-     * */
+     */
     public Cell getCell() {
       Cell output = new Cell();
       output.setTile(tileset.getTile(tileId));
@@ -139,7 +167,7 @@ public class World {
      * @param id The ID of the {@link Tiles} object to return
      * @return A {@link Tiles} object of the given ID
      * @throws IllegalArgumentException Thrown if no tile could be found with the given ID
-     * */
+     */
     public static Tiles getTileById(int id) {
       for (Tiles tile : Tiles.values()) {
         if (tile.tileId == id) {
@@ -150,38 +178,64 @@ public class World {
     }
   }
 
-  /** The amount of time it takes for an infiltrator to sabotage a system. */
-  public static final float SYSTEM_BREAK_TIME = 5f;
-  /** The chance an infiltrator will sabotage after pathfinding to a system. */
-  public static final float SYSTEM_SABOTAGE_CHANCE = 0.6f;
-  /** The distance the infiltrator can see. Default: 5 tiles */
+  /**
+   * The amount of time it takes for an infiltrator to sabotage a system.
+   */
+  public static float SYSTEM_BREAK_TIME = 5f;
+  /**
+   * The chance an infiltrator will sabotage after pathfinding to a system.
+   */
+  public static float SYSTEM_SABOTAGE_CHANCE = 0.6f;
+  /**
+   * The distance the infiltrator can see. Default: 5 tiles
+   */
   public static final float INFILTRATOR_SIGHT_RANGE = 80f;
-  /** The speed at which infiltrator projectiles should travel. */
+  /**
+   * The speed at which infiltrator projectiles should travel.
+   */
   public static final float INFILTRATOR_PROJECTILE_SPEED = 4f;
-  /** Maximum infiltrators in a full game of Auber (including defated ones). */
-  public static final int MAX_INFILTRATORS = 8;
-  /** The interval at which the infiltrator should attack the player when exposed. */
+  /**
+   * Maximum infiltrators in a full game of Auber (including defated ones).
+   */
+  public static int MAX_INFILTRATORS = 8;
+  /**
+   * The interval at which the infiltrator should attack the player when exposed.
+   */
   public static final float INFILTRATOR_FIRING_INTERVAL = 5f;
-  /** The damage a projectile should do. */
+  /**
+   * The damage a projectile should do.
+   */
   public static final float INFILTRATOR_PROJECTILE_DAMAGE = 0.2f;
   /**
    * Max infiltrators alive at a given point, Should always be greater or equal to
    * {@link World#MAX_INFILTRATORS}.
-   * */
+   */
   public static final int MAX_INFILTRATORS_IN_GAME = 3;
 
-  /** The amount of variance there should be between the speeds of different NPCs. */
+  /**
+   * The amount of variance there should be between the speeds of different NPCs.
+   */
   public static final float[] NPC_SPEED_VARIANCE = {0.8f, 1.2f};
-  /** The maximum amount of time (in seconds) an NPC should flee for. */
+  /**
+   * The maximum amount of time (in seconds) an NPC should flee for.
+   */
   public static final float NPC_FLEE_TIME = 10f;
-  /** The speed multiplier an NPC should receive when fleeing. */
+  /**
+   * The speed multiplier an NPC should receive when fleeing.
+   */
   public static final float NPC_FLEE_MULTIPLIER = 1.2f;
-  /** The shortest distance an NPC should move from its current position when fleeing. */
+  /**
+   * The shortest distance an NPC should move from its current position when fleeing.
+   */
   public static final float NPC_MIN_FLEE_DISTANCE = 80f;
-  /** The distance an NPC can here the teleporter ray shoot from. */
+  /**
+   * The distance an NPC can here the teleporter ray shoot from.
+   */
   public static final float NPC_EAR_STRENGTH = 80f;
-  /** The number of NPCs in the game. */
-  public static final int NPC_COUNT = 24;
+  /**
+   * The number of NPCs in the game.
+   */
+  public static int NPC_COUNT = 12;
 
   public static enum SystemStates {
     WORKING,
@@ -193,7 +247,7 @@ public class World {
    * Initialise the game world.
    *
    * @param game The game object.
-   * */
+   */
   public World(AuberGame game) {
     this.game = game;
     atlas = game.atlas;
@@ -201,7 +255,7 @@ public class World {
     // Configure the camera
     camera.setToOrtho(false, 480, 270);
     camera.update();
-    Player player = new Player(64f, 64f, this.atlas.createSprite("player"),new ShapeRenderer());
+    Player player = new Player(64f, 64f, this.atlas.createSprite("player"), new ShapeRenderer());
     queueEntityAdd(player);
     this.player = player;
 
@@ -227,7 +281,7 @@ public class World {
       for (int x = 0; x < navigationLayer.getWidth(); x++) {
         Cell currentCell = navigationLayer.getCell(x, y);
         float[] cellCoordinates = {x * navigationLayer.getTileWidth(),
-                                   y * navigationLayer.getTileHeight()};
+                y * navigationLayer.getTileHeight()};
         if (currentCell != null) {
           spawnLocations.add(cellCoordinates);
           if (currentCell.getTile().getId() == Tiles.FLEE_POINT.tileId) {
@@ -243,18 +297,44 @@ public class World {
    * Demo mode locks the player to the center of the screen, makes them invisible and expands the
    * camera to view the whole map.
    *
-   * @param game The game object
+   * @param game     The game object
    * @param demoMode Whether to run the game in demo mode
-   * */
-  public World(AuberGame game, boolean demoMode) {
+   */
+  public World(AuberGame game, int difficulty, boolean demoMode) {
     this(game);
     this.demoMode = demoMode;
+    setDifficulty(difficulty);
     if (demoMode) {
       camera.setToOrtho(false, 1920, 1080);
       TiledMapTileLayer layer = ((TiledMapTileLayer) map.getLayers().get(2));
       player.position.x = (layer.getWidth() * layer.getTileWidth()) / 2;
       player.position.y = (layer.getHeight() * layer.getTileHeight()) / 2;
       player.sprite.setColor(1f, 1f, 1f, 0f);
+    }
+  }
+
+  /**
+   * changes game constants to fit the difficulty
+   * @param difficulty
+   */
+  private void setDifficulty(int difficulty){
+    //easy
+    if (difficulty==0){
+      NPC_COUNT=5;
+      SYSTEM_BREAK_TIME=15f;
+      SYSTEM_SABOTAGE_CHANCE=0.4f;
+    }
+    //medium
+    if (difficulty==1){
+      NPC_COUNT=10;
+      SYSTEM_BREAK_TIME=10f;
+      SYSTEM_SABOTAGE_CHANCE=0.6f;
+    }
+    //hard
+    if (difficulty==2){
+      NPC_COUNT=15;
+      SYSTEM_BREAK_TIME=5f;
+      SYSTEM_SABOTAGE_CHANCE=0.8f;
     }
   }
 
@@ -270,7 +350,7 @@ public class World {
    * Queue an entity to be added.
    *
    * @param entity The entity to queue
-   * */
+   */
   public void queueEntityAdd(GameEntity entity) {
     newEntities.add(entity);
   }
@@ -279,14 +359,14 @@ public class World {
    * Queue an entity to be removed.
    *
    * @param entity The entity to queue
-   * */
+   */
   public void queueEntityRemove(GameEntity entity) {
     oldEntities.add(entity);
   }
 
   /**
    * Apply any queued entity removals/additions to the world.
-   * */
+   */
   public void updateEntities() {
     entities.addAll(newEntities);
     entities.removeAll(oldEntities);
@@ -294,28 +374,59 @@ public class World {
     oldEntities.clear();
   }
 
+  public void usePowers() {
+    if (player.powerRevealTrigger) {
+      revealInfiltrators();
+      player.powerRevealTrigger = false;
+    }
+    if (player.powerSlowTrigger){
+      slowInfiltrators();
+      player.powerSlowTrigger=false;
+    }
+  }
+
+  private void slowInfiltrators(){
+    for (GameEntity entity : getEntities()) {
+      if (entity instanceof Infiltrator) {
+        ((Npc)entity).maxSpeed=((Npc)entity).maxSpeed/4;
+      }
+    }
+  }
+
+  /**
+   * reveals all infiltrators on screen
+   */
+  public void revealInfiltrators() {
+    for (GameEntity entity : getEntities()) {
+      if (entity instanceof Infiltrator) {
+        ((Infiltrator) entity).exposed = true;
+        ((Infiltrator) entity).updateSprite(atlas.createSprite("infiltrator"));
+      }
+    }
+  }
+
   /**
    * Update the sprite of a system to match a new state.
    *
-   * @param x The x coordinate of the system object (not the tile)
-   * @param y The y coordinate of the system object (not the tile)
+   * @param x        The x coordinate of the system object (not the tile)
+   * @param y        The y coordinate of the system object (not the tile)
    * @param newState The new state of the system
    **/
   public void updateSystemState(float x, float y, SystemStates newState) {
     TiledMapTileLayer collisionLayer = (TiledMapTileLayer) World.map.getLayers()
-        .get("collision_layer");
+            .get("collision_layer");
 
     int[] systemPosition = {
-      (int) x / collisionLayer.getTileWidth(),
-      (int) (y / collisionLayer.getTileHeight()) + 1
-      };
+            (int) x / collisionLayer.getTileWidth(),
+            (int) (y / collisionLayer.getTileHeight()) + 1
+    };
 
     Cell attackedSystemCell = collisionLayer.getCell(systemPosition[0], systemPosition[1]);
     int targetTileId = attackedSystemCell.getTile().getId();
 
     if (targetTileId == World.Tiles.STANDALONE_SYSTEM.tileId
-        || targetTileId == World.Tiles.STANDALONE_SYSTEM_ATTACKED.tileId
-        || targetTileId == World.Tiles.STANDALONE_SYSTEM_DESTROYED.tileId) {
+            || targetTileId == World.Tiles.STANDALONE_SYSTEM_ATTACKED.tileId
+            || targetTileId == World.Tiles.STANDALONE_SYSTEM_DESTROYED.tileId) {
       Cell newSystem;
       Cell newSystemLight;
 
@@ -341,7 +452,7 @@ public class World {
       collisionLayer.setCell(systemPosition[0], systemPosition[1], newSystem);
 
       TiledMapTileLayer foregroundLayer = (TiledMapTileLayer) map.getLayers()
-          .get("foreground_layer");
+              .get("foreground_layer");
       foregroundLayer.setCell(systemPosition[0], systemPosition[1] + 1, newSystemLight);
     } else {
       Cell newSystem;
@@ -365,7 +476,7 @@ public class World {
     if (newState == SystemStates.DESTROYED) {
       for (RectangleMapObject system : systems) {
         if (system.getRectangle().getX() == x
-            && system.getRectangle().getY() == y) {
+                && system.getRectangle().getY() == y) {
           systems.remove(system);
           break;
         }
@@ -380,15 +491,15 @@ public class World {
    * @param y The y coordinate to check
    * @return A {@link SystemStates} representing the state of the system
    * @throws IllegalArgumentException if a standalone system light is at the coordinates provided
-   * */
+   */
   public SystemStates getSystemState(float x, float y) {
     TiledMapTileLayer collisionLayer = (TiledMapTileLayer) World.map.getLayers()
-        .get("collision_layer");
+            .get("collision_layer");
 
     int[] systemPosition = {
-      (int) x / collisionLayer.getTileWidth(),
-      (int) (y / collisionLayer.getTileHeight()) + 1
-      };
+            (int) x / collisionLayer.getTileWidth(),
+            (int) (y / collisionLayer.getTileHeight()) + 1
+    };
 
     Cell attackedSystemCell = collisionLayer.getCell(systemPosition[0], systemPosition[1]);
     if (attackedSystemCell == null) {
@@ -412,7 +523,7 @@ public class World {
 
       default:
         throw new IllegalArgumentException("Use the coordinates of the System object on the"
-                                           .concat("tilemap - not the system tile."));
+                .concat("tilemap - not the system tile."));
     }
   }
 
@@ -422,16 +533,99 @@ public class World {
 
   /**
    * Check to see if any of the end conditions have been met, if so update the screen.
-   * */
+   */
   public void checkForEndState() {
     if (systems.isEmpty()) {
       if (!demoMode) {
         game.setScreen(new GameOverScreen(game, false));
       } else {
-        game.setScreen(new GameScreen(game, true));
+        game.setScreen(new GameScreen(game, difficulty,true));
       }
     } else if (infiltratorCount <= 0) {
       game.setScreen(new GameOverScreen(game, true));
     }
+
   }
+
+  public void save(){
+    System.out.println("save");
+    Preferences playerPref = Gdx.app.getPreferences("playerPref");
+    Preferences infilPref = Gdx.app.getPreferences("infilPref");
+    Preferences civilPref = Gdx.app.getPreferences("civilPref");
+    Preferences worldPref= Gdx.app.getPreferences("worldPref");
+    Preferences sysPref=Gdx.app.getPreferences("sysPref");
+
+    playerPref.clear();
+    infilPref.clear();
+    civilPref.clear();
+    worldPref.clear();
+    sysPref.clear();
+
+    playerPref.putFloat("playerx",player.position.x);
+    playerPref.putFloat("playery",player.position.y);
+
+    worldPref.putInteger("infiltratorsAddedCount",infiltratorsAddedCount);
+
+    int infilCount=-1;
+    int civilianCount=-1;
+    for (GameEntity entity: entities){
+      if (entity instanceof Infiltrator){
+        infilCount+=1;
+        infilPref.putFloat(String.valueOf(infiltratorCount)+"x",entity.position.x);
+        infilPref.putFloat(String.valueOf(infiltratorCount)+"y",entity.position.y);
+      }
+      if (entity instanceof Civilian){
+        civilianCount+=1;
+        civilPref.putFloat(String.valueOf(civilianCount)+"x",entity.position.x);
+        civilPref.putFloat(String.valueOf(civilianCount)+"y",entity.position.y);
+      }
+
+    }
+    for (RectangleMapObject system: systems){
+      String location=String.valueOf(system.getRectangle().getX())+String.valueOf(system.getRectangle().getY());
+      sysPref.putBoolean(location,true);
+    }
+
+    playerPref.flush();
+    infilPref.flush();
+    civilPref.flush();
+    worldPref.flush();
+    sysPref.flush();
+    System.out.println(infilPref.get());
+  }
+  public void load(){
+    Preferences playerP = Gdx.app.getPreferences("playerPref");
+    Preferences infilP = Gdx.app.getPreferences("infilPref");
+    Preferences civilPref = Gdx.app.getPreferences("civilPref");
+    Preferences worldPref = Gdx.app.getPreferences("worldPref");
+
+    infiltratorsAddedCount= worldPref.getInteger("infiltratorsAddedCount");
+
+    entities.clear();
+    queueEntityAdd(player);
+    player.position.set(playerP.getFloat("playerx"),playerP.getFloat("playery"));
+    for (int i = 0 ; i<=infilP.get().size()/2;i++){
+      float x=infilP.getFloat(String.valueOf(i)+"x");
+      float y=infilP.getFloat(String.valueOf(i)+"y");
+      Infiltrator infil =new Infiltrator(this);
+      queueEntityAdd(infil);
+
+    }
+   for (int i = 0 ; i<=civilPref.get().size()/2;i++){
+      float x=civilPref.getFloat(String.valueOf(i)+"x");
+      float y=civilPref.getFloat(String.valueOf(i)+"y");
+      Civilian civil=new Civilian(this);
+      queueEntityAdd(civil);
+
+
+
+    }
+
+
+
+
+
+  }
+
+
 }

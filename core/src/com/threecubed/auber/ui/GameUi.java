@@ -18,7 +18,7 @@ public class GameUi {
   private static final int CHARGE_METER_WIDTH = 20;
   private static final int CHARGE_METER_MAX_HEIGHT = 100;
   private static final Vector2 CHARGE_METER_POSITION = new Vector2(50f, 50f);
-
+  private static final Vector2 SPECIAL_POWER_POSITION=new Vector2(500,100f);
   private static final Vector2 HEALTHBAR_POSITION = new Vector2(250f, 50f);
   private static final int HEALTHBAR_WIDTH = 20;
   private static final int HEALTHBAR_MAX_HEIGHT = 100;
@@ -35,6 +35,7 @@ public class GameUi {
   private BitmapFont uiFont = new BitmapFont();
 
   public GameUi(AuberGame game) {
+
     arrowSprite = game.atlas.createSprite("arrow2");
   }
 
@@ -57,8 +58,29 @@ public class GameUi {
     drawHealthbar(world, screenBatch);
     drawHealthWarnings(world, screenBatch);
     drawSystemWarnings(world, screenBatch);
-  }
+    drawSpecialPower(world,screenBatch);
 
+  }
+  /**
+   * Draw the current special power
+   *
+   * @param world The game world
+   * @param screenBatch The batch to draw to
+   * */
+  private void drawSpecialPower(World world, SpriteBatch screenBatch){
+    screenBatch.begin();
+    String power="None";
+    if (world.infiltratorsDead==1 && !world.player.powerBeamUsed) { power=": Super beam";}
+    else if (world.infiltratorsDead==2 && !world.player.powerMaxHealth){power=": Increase Max Health"; }
+    else if (world.infiltratorsDead==3 && !world.player.powerStopInfiltratorPowerUsed){ power=":  Stop infiltrator powers";}
+    else if (world.infiltratorsDead==4 && !world.player.powerRevealUsed){power =":  Reveal infiltators";}
+    else if (world.infiltratorsDead==5 && !world.player.powerSlowUsed){power=": Slow infiltrators";}
+    if (power!="None") {
+      uiFont.draw(screenBatch, "Power up (P)" + power, SPECIAL_POWER_POSITION.x, SPECIAL_POWER_POSITION.y);
+
+    }
+    screenBatch.end();
+  }
   /**
    * Draw the teleporter charge meter.
    *

@@ -77,7 +77,7 @@ public class Player extends GameEntity {
       health=maxHealth; }
     if (infiltratorsDead==3 && !powerStopInfiltratorPowerUsed){
       powerStopInfiltratorPowerUsed=true;
-      PowerStopInfiltratorPower(); }
+      powerStopInfiltratorPower(); }
     if (infiltratorsDead==4 && !powerRevealUsed){
       powerRevealUsed=true;
       powerRevealTrigger=true;}
@@ -90,7 +90,7 @@ public class Player extends GameEntity {
   /**
    * Removes any negative side effects from infiltrator powers
    */
-  public void PowerStopInfiltratorPower(){
+  public void powerStopInfiltratorPower(){
     slowed=false;
     confused=false;
     blinded=false;

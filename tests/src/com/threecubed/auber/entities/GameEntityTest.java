@@ -42,6 +42,7 @@ public class GameEntityTest {
         Sprite sprite = atlas.createSprite("player");
         Player player = new Player(0, 0, sprite, renderer);
         Assert.assertEquals(player.getCenterX(), player.sprite.getWidth() / 2,0.001);
+        atlas.dispose();
 
     }
 
@@ -52,6 +53,7 @@ public class GameEntityTest {
         Sprite sprite = atlas.createSprite("player");
         Player player = new Player(0, 0, sprite, renderer);
         Assert.assertEquals(player.getCenterY(), player.sprite.getHeight() / 2,0.001);
+        atlas.dispose();
 
     }
 
@@ -63,6 +65,7 @@ public class GameEntityTest {
         Player player = new Player(0, 0, sprite, renderer);
         Assert.assertEquals(player.getCenter().x,player.sprite.getWidth()/2,001);
         Assert.assertEquals(player.getCenter().y,player.sprite.getHeight()/2,001);
+        atlas.dispose();
     }
 }
 

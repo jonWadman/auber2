@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="de.tomgrill.gdxtesting.examples.UnitTestExample" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-02-08T03:30:37" hostname="BitCruncher" time="0.0">
+<testsuite name="de.tomgrill.gdxtesting.examples.UnitTestExample" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-02-08T13:49:46" hostname="LAPTOP-2C2PBR86" time="0.0">
   <properties/>
   <testcase name="oneEqualsOne" classname="de.tomgrill.gdxtesting.examples.UnitTestExample" time="0.0"/>
   <system-out><![CDATA[]]></system-out>

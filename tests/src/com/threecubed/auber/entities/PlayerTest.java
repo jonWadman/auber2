@@ -1,14 +1,18 @@
 package com.threecubed.auber.entities;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import de.tomgrill.gdxtesting.GdxTestRunner;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
-
+@RunWith(GdxTestRunner.class)
 public class PlayerTest {
 
     @Test
@@ -58,6 +62,7 @@ public class PlayerTest {
         Assert.assertEquals(true,player.blinded);
         Assert.assertEquals(true,player.slowed);
 
+        atlas.dispose();
 
 
     }
@@ -65,5 +70,26 @@ public class PlayerTest {
 
     @Test
     public void powerStopInfiltratorPower() {
+        //Create Test Player
+        ShapeRenderer renderer = Mockito.mock(ShapeRenderer.class);
+        TextureAtlas atlas = new TextureAtlas("src/de/tomgrill/gdxtesting/assets/auber.atlas");
+        Sprite sprite = atlas.createSprite("player");
+        Player player = new Player(0, 0, sprite, renderer);
+
+        
+        player.confused=true;
+        player.blinded=true;
+        player.slowed=true;
+
+        player.powerStopInfiltratorPower();
+        Assert.assertEquals(false,player.confused);
+        Assert.assertEquals(false,player.blinded);
+        Assert.assertEquals(false,player.slowed);
+
+        atlas.dispose();
     }
+
+
+
+
 }

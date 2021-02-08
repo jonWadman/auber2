@@ -70,11 +70,11 @@ public class GameUi {
   private void drawSpecialPower(World world, SpriteBatch screenBatch){
     screenBatch.begin();
     String power="None";
-    if (world.infiltratorsDead==1 && !world.player.powerBeamUsed) { power=": Super beam";}
-    else if (world.infiltratorsDead==2 && !world.player.powerMaxHealth){power=": Increase Max Health"; }
-    else if (world.infiltratorsDead==3 && !world.player.powerStopInfiltratorPowerUsed){ power=":  Stop infiltrator powers";}
-    else if (world.infiltratorsDead==4 && !world.player.powerRevealUsed){power =":  Reveal infiltators";}
-    else if (world.infiltratorsDead==5 && !world.player.powerSlowUsed){power=": Slow infiltrators";}
+    if (world.infiltratorsCaught==1 && !world.player.powerBeamUsed) { power=": Super beam";}
+    else if (world.infiltratorsCaught==2 && !world.player.powerMaxHealth){power=": Increase Max Health"; }
+    else if (world.infiltratorsCaught==3 && !world.player.powerStopInfiltratorPowerUsed){ power=":  Stop infiltrator powers";}
+    else if (world.infiltratorsCaught==4 && !world.player.powerRevealUsed){power =":  Reveal infiltators";}
+    else if (world.infiltratorsCaught==5 && !world.player.powerSlowUsed){power=": Slow infiltrators";}
     if (power!="None") {
       uiFont.draw(screenBatch, "Power up (P)" + power, SPECIAL_POWER_POSITION.x, SPECIAL_POWER_POSITION.y);
 

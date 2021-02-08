@@ -76,7 +76,7 @@ public class PlayerTest {
         Sprite sprite = atlas.createSprite("player");
         Player player = new Player(0, 0, sprite, renderer);
 
-        
+
         player.confused=true;
         player.blinded=true;
         player.slowed=true;

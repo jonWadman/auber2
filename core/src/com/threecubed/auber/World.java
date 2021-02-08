@@ -23,6 +23,7 @@ import com.threecubed.auber.pathfinding.NavigationMesh;
 import com.threecubed.auber.screens.GameOverScreen;
 import com.threecubed.auber.screens.GameScreen;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 
@@ -66,6 +67,7 @@ public class World {
 
 
   public ArrayList<RectangleMapObject> systems = new ArrayList<>();
+  public ArrayList<RectangleMapObject> destroyedSystems = new ArrayList<>();
   public RectangleMapObject medbay;
   public ArrayList<float[]> spawnLocations = new ArrayList<>();
 
@@ -76,6 +78,7 @@ public class World {
           (TiledMapTileLayer) map.getLayers().get("navigation_layer")
   );
   public ArrayList<float[]> fleePoints = new ArrayList<>();
+
 
   /**
    * Coordinates for the bottom left and top right tiles of the brig.
@@ -243,6 +246,8 @@ public class World {
     DESTROYED
   }
 
+  public Hashtable<int[], SystemStates> systemStateSaves;
+
   /**
    * Initialise the game world.
    *
@@ -315,26 +320,27 @@ public class World {
 
   /**
    * changes game constants to fit the difficulty
+   *
    * @param difficulty
    */
-  private void setDifficulty(int difficulty){
+  private void setDifficulty(int difficulty) {
     //easy
-    if (difficulty==0){
-      NPC_COUNT=5;
-      SYSTEM_BREAK_TIME=15f;
-      SYSTEM_SABOTAGE_CHANCE=0.4f;
+    if (difficulty == 0) {
+      NPC_COUNT = 5;
+      SYSTEM_BREAK_TIME = 15f;
+      SYSTEM_SABOTAGE_CHANCE = 0.4f;
     }
     //medium
-    if (difficulty==1){
-      NPC_COUNT=10;
-      SYSTEM_BREAK_TIME=10f;
-      SYSTEM_SABOTAGE_CHANCE=0.6f;
+    if (difficulty == 1) {
+      NPC_COUNT = 10;
+      SYSTEM_BREAK_TIME = 10f;
+      SYSTEM_SABOTAGE_CHANCE = 0.6f;
     }
     //hard
-    if (difficulty==2){
-      NPC_COUNT=15;
-      SYSTEM_BREAK_TIME=5f;
-      SYSTEM_SABOTAGE_CHANCE=0.8f;
+    if (difficulty == 2) {
+      NPC_COUNT = 15;
+      SYSTEM_BREAK_TIME = 5f;
+      SYSTEM_SABOTAGE_CHANCE = 0.8f;
     }
   }
 
@@ -379,16 +385,16 @@ public class World {
       revealInfiltrators();
       player.powerRevealTrigger = false;
     }
-    if (player.powerSlowTrigger){
+    if (player.powerSlowTrigger) {
       slowInfiltrators();
-      player.powerSlowTrigger=false;
+      player.powerSlowTrigger = false;
     }
   }
 
-  private void slowInfiltrators(){
+  private void slowInfiltrators() {
     for (GameEntity entity : getEntities()) {
       if (entity instanceof Infiltrator) {
-        ((Npc)entity).maxSpeed=((Npc)entity).maxSpeed/4;
+        ((Npc) entity).maxSpeed = ((Npc) entity).maxSpeed / 4;
       }
     }
   }
@@ -478,6 +484,7 @@ public class World {
         if (system.getRectangle().getX() == x
                 && system.getRectangle().getY() == y) {
           systems.remove(system);
+          destroyedSystems.add(system);
           break;
         }
       }
@@ -539,7 +546,7 @@ public class World {
       if (!demoMode) {
         game.setScreen(new GameOverScreen(game, false));
       } else {
-        game.setScreen(new GameScreen(game, difficulty,true));
+        game.setScreen(new GameScreen(game, difficulty, true));
       }
     } else if (infiltratorCount <= 0) {
       game.setScreen(new GameOverScreen(game, true));
@@ -547,31 +554,32 @@ public class World {
 
   }
 //NEW CODE
+
   /**
    * Saves all game data to preferences
    */
-  public void save(){
+  public void save() {
     System.out.println("save");
     Preferences playerPref = Gdx.app.getPreferences("playerPref");
-    Preferences worldPref= Gdx.app.getPreferences("worldPref");
-    Preferences sysPref=Gdx.app.getPreferences("sysPref");
+    Preferences worldPref = Gdx.app.getPreferences("worldPref");
+    Preferences sysPref = Gdx.app.getPreferences("sysPref");
 
     playerPref.clear();
     worldPref.clear();
     sysPref.clear();
 
-    playerPref.putFloat("playerx",player.position.x);
-    playerPref.putFloat("playery",player.position.y);
-    playerPref.putFloat("health",player.health);
-    playerPref.putFloat("maxhealth",player.maxHealth);
+    playerPref.putFloat("playerx", player.position.x);
+    playerPref.putFloat("playery", player.position.y);
+    playerPref.putFloat("health", player.health);
+    playerPref.putFloat("maxhealth", player.maxHealth);
 
-    worldPref.putInteger("infiltratorsAddedCount",infiltratorsAddedCount);
-    worldPref.putInteger("infiltratorsCaught",infiltratorsCaught);
+    worldPref.putInteger("infiltratorsAddedCount", infiltratorsAddedCount);
+    worldPref.putInteger("infiltratorsCaught", infiltratorsCaught);
 
 
-    for (RectangleMapObject system: systems){
-      String location=String.valueOf(system.getRectangle().getX())+String.valueOf(system.getRectangle().getY());
-      sysPref.putBoolean(location,true);
+    for (RectangleMapObject system : systems) {
+      String location = String.valueOf(system.getRectangle().getX()) + String.valueOf(system.getRectangle().getY());
+      sysPref.putBoolean(location, true);
     }
 
     playerPref.flush();
@@ -579,28 +587,29 @@ public class World {
     sysPref.flush();
 
     saveEntities();
+    saveSystems();
   }
 
   /**
    * saves information about infiltrators and civilians
    */
-  private void saveEntities(){
+  private void saveEntities() {
     Preferences infilPref = Gdx.app.getPreferences("infilPref");
     Preferences civilPref = Gdx.app.getPreferences("civilPref");
     infilPref.clear();
     civilPref.clear();
-    int infilCount=-1;
-    int civilianCount=-1;
-    for (GameEntity entity: entities){
-      if (entity instanceof Infiltrator){
-        infilCount+=1;
-        infilPref.putFloat(String.valueOf(infiltratorCount)+"x",entity.position.x);
-        infilPref.putFloat(String.valueOf(infiltratorCount)+"y",entity.position.y);
+    int infilCount = -1;
+    int civilianCount = -1;
+    for (GameEntity entity : entities) {
+      if (entity instanceof Infiltrator) {
+        infilCount += 1;
+        infilPref.putFloat(String.valueOf(infiltratorCount) + "x", entity.position.x);
+        infilPref.putFloat(String.valueOf(infiltratorCount) + "y", entity.position.y);
       }
-      if (entity instanceof Civilian){
-        civilianCount+=1;
-        civilPref.putFloat(String.valueOf(civilianCount)+"x",entity.position.x);
-        civilPref.putFloat(String.valueOf(civilianCount)+"y",entity.position.y);
+      if (entity instanceof Civilian) {
+        civilianCount += 1;
+        civilPref.putFloat(String.valueOf(civilianCount) + "x", entity.position.x);
+        civilPref.putFloat(String.valueOf(civilianCount) + "y", entity.position.y);
       }
     }
 
@@ -608,39 +617,74 @@ public class World {
     civilPref.flush();
 
   }
+
+  private void saveSystems() {
+    Preferences destroyedSystemsPrefs = Gdx.app.getPreferences("destroyedSystems");
+    Preferences workingSystemsPrefs = Gdx.app.getPreferences("workingSystems");
+
+    destroyedSystemsPrefs.clear();
+    workingSystemsPrefs.clear();
+
+    TiledMapTileLayer collisionLayer = (TiledMapTileLayer) World.map.getLayers().get("collision_layer");
+
+    for (RectangleMapObject system : systems) {
+      int x = (int) system.getRectangle().x;
+      int y = (int) system.getRectangle().y;
+      int tileX = (int) x / collisionLayer.getTileWidth();
+      int tileY = (int) (y / collisionLayer.getTileHeight()) + 1;
+      int id = collisionLayer.getCell(tileX, tileY).getTile().getId();
+      workingSystemsPrefs.putInteger(String.valueOf(x), y);
+      }
+
+    for (RectangleMapObject system : destroyedSystems) {
+      int x = (int) system.getRectangle().x;
+      int y = (int) system.getRectangle().y;
+      int tileX = (int) x / collisionLayer.getTileWidth();
+      int tileY = (int) (y / collisionLayer.getTileHeight()) + 1;
+      int id = collisionLayer.getCell(tileX, tileY).getTile().getId();
+      destroyedSystemsPrefs.putInteger(String.valueOf(x), y);
+
+    }
+    destroyedSystemsPrefs.flush();
+    workingSystemsPrefs.flush();
+  }
+
+
+
   /**
    * loads the save data
    */
-  public void load(){
+  public void load() {
     Preferences worldPref = Gdx.app.getPreferences("worldPref");
-    infiltratorsAddedCount= worldPref.getInteger("infiltratorsAddedCount");
-    infiltratorsCaught=worldPref.getInteger("infiltratorsCaught");
+    infiltratorsAddedCount = worldPref.getInteger("infiltratorsAddedCount");
+    infiltratorsCaught = worldPref.getInteger("infiltratorsCaught");
     entities.clear();
     loadPlayer();
     loadCivilians();
     loadInfiltrators();
+    loadSystems();
   }
 
   /**
    * loads player into game from last save
    */
-  private void loadPlayer(){
+  private void loadPlayer() {
     Preferences playerP = Gdx.app.getPreferences("playerPref");
-    player.position.set(playerP.getFloat("playerx"),playerP.getFloat("playery"));
-    player.health=playerP.getFloat("health");
-    player.maxHealth=playerP.getFloat("maxhealth");
+    player.position.set(playerP.getFloat("playerx"), playerP.getFloat("playery"));
+    player.health = playerP.getFloat("health");
+    player.maxHealth = playerP.getFloat("maxhealth");
     queueEntityAdd(player);
   }
 
   /**
    * loads the civilians from save
    */
-  private void loadCivilians(){
+  private void loadCivilians() {
     Preferences civilPref = Gdx.app.getPreferences("civilPref");
-    for (int i = 0 ; i<=civilPref.get().size()/2;i++){
-      float x=civilPref.getFloat(String.valueOf(i)+"x");
-      float y=civilPref.getFloat(String.valueOf(i)+"y");
-      Civilian civil=new Civilian(this);
+    for (int i = 0; i <= civilPref.get().size() / 2; i++) {
+      float x = civilPref.getFloat(String.valueOf(i) + "x");
+      float y = civilPref.getFloat(String.valueOf(i) + "y");
+      Civilian civil = new Civilian(this);
       queueEntityAdd(civil);
     }
   }
@@ -648,15 +692,57 @@ public class World {
   /**
    * loads the infiltrators from save
    */
-  private void loadInfiltrators(){
+  private void loadInfiltrators() {
     Preferences infilP = Gdx.app.getPreferences("infilPref");
-    for (int i = 0 ; i<=infilP.get().size()/2;i++){
-      float x=infilP.getFloat(String.valueOf(i)+"x");
-      float y=infilP.getFloat(String.valueOf(i)+"y");
-      Infiltrator infil =new Infiltrator(this);
+    for (int i = 0; i <= infilP.get().size() / 2; i++) {
+      float x = infilP.getFloat(String.valueOf(i) + "x");
+      float y = infilP.getFloat(String.valueOf(i) + "y");
+      Infiltrator infil = new Infiltrator(this);
       queueEntityAdd(infil);
-
     }
+  }
+
+  /**
+   * load systems into game with correct state (working or destroyed)
+   */
+  public void loadSystems(){
+      Preferences destroyedSystemsPref = Gdx.app.getPreferences("destroyedSystems");
+      Preferences workingSystemsPref = Gdx.app.getPreferences("workingSystems");
+
+      //Changes all working systems back to saved state
+      for (RectangleMapObject system:systems){
+        int x=(int)system.getRectangle().getX();
+        int y=(int)system.getRectangle().getY();
+        if (destroyedSystemsPref.contains(String.valueOf(x))){
+          if (destroyedSystemsPref.getInteger(String.valueOf(x))==y){
+            updateSystemState(system.getRectangle().getX(),system.getRectangle().y,SystemStates.DESTROYED); }
+        }
+        if (workingSystemsPref.contains(String.valueOf(x))){
+          if (workingSystemsPref.getInteger(String.valueOf(x))==y){
+            updateSystemState(system.getRectangle().getX(),system.getRectangle().y,SystemStates.WORKING); }
+        }
+      }
+
+      //Changes all destroyed systems back to saved state
+      for (RectangleMapObject system:destroyedSystems){
+        int x=(int)system.getRectangle().getX();
+        int y=(int)system.getRectangle().getY();
+        if (workingSystemsPref.contains(String.valueOf(x))){
+          if (workingSystemsPref.getInteger(String.valueOf(x))==y){
+            updateSystemState(system.getRectangle().getX(),system.getRectangle().y,SystemStates.WORKING);
+            systems.add(system);
+          }
+        }
+      }
+
+      //updates destroyed system list
+      for (RectangleMapObject system:systems){
+        if (destroyedSystems.contains(system)) {
+          System.out.println("REMOVE");
+          destroyedSystems.remove(system);
+        }
+      }
 
   }
 }
+

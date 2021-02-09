@@ -60,33 +60,34 @@ public class Player extends GameEntity {
     this.rayRenderer=renderer;
 
   }
+  /***NEW CODE***/
   /**
    * Executes the current available power
    *
-   * @param infiltratorsDead The number of infiltrators killed
+   * @param infiltratorsCaught The number of infiltrators killed
    * */
 
-  public void powerOn(Integer infiltratorsDead){
-    if (infiltratorsDead==1 && !powerBeamUsed) {
+  public void powerOn(Integer infiltratorsCaught){
+    if (infiltratorsCaught==1 && !powerBeamUsed) {
       powerBeamUsed=true;
       rayWidth=10f;
       rayMargin=2f;}
-    if (infiltratorsDead==2 && !powerMaxHealth){
+    if (infiltratorsCaught==2 && !powerMaxHealth){
       powerMaxHealth=true;
       maxHealth=1.5f;
       health=maxHealth; }
-    if (infiltratorsDead==3 && !powerStopInfiltratorPowerUsed){
+    if (infiltratorsCaught==3 && !powerStopInfiltratorPowerUsed){
       powerStopInfiltratorPowerUsed=true;
       powerStopInfiltratorPower(); }
-    if (infiltratorsDead==4 && !powerRevealUsed){
+    if (infiltratorsCaught==4 && !powerRevealUsed){
       powerRevealUsed=true;
       powerRevealTrigger=true;}
-    if (infiltratorsDead==5 &&!powerSlowUsed){
+    if (infiltratorsCaught==5 &&!powerSlowUsed){
       powerSlowUsed=true;
       powerSlowTrigger=true;}
   }
 
-
+  /***NEW CODE***/
   /**
    * Removes any negative side effects from infiltrator powers
    */

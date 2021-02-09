@@ -317,9 +317,9 @@ public class World {
       player.sprite.setColor(1f, 1f, 1f, 0f);
     }
   }
-
+  /***NEW CODE***/
   /**
-   * changes game constants to fit the difficulty
+   * changes game constants to fit the difficulty where 0 is easiest and 2 is hardest
    *
    * @param difficulty
    */
@@ -380,6 +380,10 @@ public class World {
     oldEntities.clear();
   }
 
+  /***NEW CODE***/
+  /**
+   * Uses auber powers (that do not relate to auber itself)
+   */
   public void usePowers() {
     if (player.powerRevealTrigger) {
       revealInfiltrators();
@@ -390,15 +394,18 @@ public class World {
       player.powerSlowTrigger = false;
     }
   }
-
+  /***NEW CODE***/
+  /**
+   * Decreases the entity speed by 50 percent
+   */
   private void slowInfiltrators() {
     for (GameEntity entity : getEntities()) {
       if (entity instanceof Infiltrator) {
-        ((Npc) entity).maxSpeed = ((Npc) entity).maxSpeed / 4;
+        ((Npc) entity).maxSpeed = ((Npc) entity).maxSpeed / 2;
       }
     }
   }
-
+  /***NEW CODE***/
   /**
    * reveals all infiltrators on screen
    */
@@ -553,7 +560,7 @@ public class World {
     }
 
   }
-//NEW CODE
+  /***NEW CODE HERE DOWN***/
 
   /**
    * Saves all game data to preferences
@@ -575,6 +582,7 @@ public class World {
 
     worldPref.putInteger("infiltratorsAddedCount", infiltratorsAddedCount);
     worldPref.putInteger("infiltratorsCaught", infiltratorsCaught);
+    worldPref.putInteger("difficulty",difficulty);
 
 
     for (RectangleMapObject system : systems) {
@@ -658,6 +666,8 @@ public class World {
     Preferences worldPref = Gdx.app.getPreferences("worldPref");
     infiltratorsAddedCount = worldPref.getInteger("infiltratorsAddedCount");
     infiltratorsCaught = worldPref.getInteger("infiltratorsCaught");
+    difficulty=worldPref.getInteger("difficulty");
+    setDifficulty(difficulty);
     entities.clear();
     loadPlayer();
     loadCivilians();

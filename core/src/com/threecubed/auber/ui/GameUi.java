@@ -18,7 +18,7 @@ public class GameUi {
   private static final int CHARGE_METER_WIDTH = 20;
   private static final int CHARGE_METER_MAX_HEIGHT = 100;
   private static final Vector2 CHARGE_METER_POSITION = new Vector2(50f, 50f);
-  private static final Vector2 SPECIAL_POWER_POSITION=new Vector2(500,100f);
+  private static final Vector2 SPECIAL_POWER_POSITION=new Vector2(500f,100f);
   private static final Vector2 HEALTHBAR_POSITION = new Vector2(250f, 50f);
   private static final int HEALTHBAR_WIDTH = 20;
   private static final int HEALTHBAR_MAX_HEIGHT = 100;
@@ -59,8 +59,11 @@ public class GameUi {
     drawHealthWarnings(world, screenBatch);
     drawSystemWarnings(world, screenBatch);
     drawSpecialPower(world,screenBatch);
+    drawSaveLoadHelper(screenBatch);
 
   }
+
+  /***NEW CODE***/
   /**
    * Draw the current special power
    *
@@ -70,6 +73,7 @@ public class GameUi {
   private void drawSpecialPower(World world, SpriteBatch screenBatch){
     screenBatch.begin();
     String power="None";
+    world.infiltratorsCaught=3;
     if (world.infiltratorsCaught==1 && !world.player.powerBeamUsed) { power=": Super beam";}
     else if (world.infiltratorsCaught==2 && !world.player.powerMaxHealth){power=": Increase Max Health"; }
     else if (world.infiltratorsCaught==3 && !world.player.powerStopInfiltratorPowerUsed){ power=":  Stop infiltrator powers";}
@@ -79,6 +83,16 @@ public class GameUi {
       uiFont.draw(screenBatch, "Power up (P)" + power, SPECIAL_POWER_POSITION.x, SPECIAL_POWER_POSITION.y);
 
     }
+    screenBatch.end();
+  }
+  /***NEW CODE***/
+  /**
+   * draw keys to press for save and load
+   * @param screenBatch
+   */
+  private void drawSaveLoadHelper(SpriteBatch screenBatch){
+    screenBatch.begin();
+    uiFont.draw(screenBatch, "Save (K) Load (L)", SPECIAL_POWER_POSITION.x+400f, SPECIAL_POWER_POSITION.y);
     screenBatch.end();
   }
   /**

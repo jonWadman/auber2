@@ -73,7 +73,6 @@ public class GameUi {
   private void drawSpecialPower(World world, SpriteBatch screenBatch){
     screenBatch.begin();
     String power="None";
-    world.infiltratorsCaught=3;
     if (world.infiltratorsCaught==1 && !world.player.powerBeamUsed) { power=": Super beam";}
     else if (world.infiltratorsCaught==2 && !world.player.powerMaxHealth){power=": Increase Max Health"; }
     else if (world.infiltratorsCaught==3 && !world.player.powerStopInfiltratorPowerUsed){ power=":  Stop infiltrator powers";}

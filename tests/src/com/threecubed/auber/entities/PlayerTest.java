@@ -103,6 +103,7 @@ public class PlayerTest {
         float[] MEDBAY_COORDINATES = {96f, 640f};
         player.respawn(MEDBAY_COORDINATES[0],MEDBAY_COORDINATES[1]);
 
+        //check player is in medbay
         Assert.assertEquals(96f,player.position.x,0.01);
         Assert.assertEquals(640f,player.position.y,0.01);
         Assert.assertEquals(false,player.confused);

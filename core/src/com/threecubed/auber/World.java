@@ -566,14 +566,11 @@ public class World {
    * Saves all game data to preferences
    */
   public void save() {
-    System.out.println("save");
     Preferences playerPref = Gdx.app.getPreferences("playerPref");
     Preferences worldPref = Gdx.app.getPreferences("worldPref");
-    Preferences sysPref = Gdx.app.getPreferences("sysPref");
 
     playerPref.clear();
     worldPref.clear();
-    sysPref.clear();
 
     playerPref.putFloat("playerx", player.position.x);
     playerPref.putFloat("playery", player.position.y);
@@ -585,14 +582,10 @@ public class World {
     worldPref.putInteger("difficulty",difficulty);
 
 
-    for (RectangleMapObject system : systems) {
-      String location = String.valueOf(system.getRectangle().getX()) + String.valueOf(system.getRectangle().getY());
-      sysPref.putBoolean(location, true);
-    }
 
     playerPref.flush();
     worldPref.flush();
-    sysPref.flush();
+
 
     saveEntities();
     saveSystems();

@@ -54,12 +54,12 @@ public class Player extends GameEntity {
   private Float rayWidth=0.5f;
   private float rayMargin=1f;
 
-
+  /***NEW CODE REFACTORED FOR TESINTING***/
   public Player(float x, float y, Sprite sprite,ShapeRenderer renderer) {
     super(x, y, sprite);
     this.rayRenderer=renderer;
-
   }
+
   /***NEW CODE***/
   /**
    * Executes the current available power
@@ -96,7 +96,25 @@ public class Player extends GameEntity {
     confused=false;
     blinded=false;
   }
+  /***NEW CODE REFACTORED FOR TESTING***/
+  /**
+   * Puts player in MEDBAY and removes negative powers
+   */
+  public void respawn(float x, float y){
+    position.set(x,y);
+    confused = false;
+    slowed = false;
+    teleporterRayCoordinates.setZero();
 
+  }
+  /***NEW CODE REFACTORED FOR TESTING***/
+  /**
+   * heals player by rate amount upto max
+   */
+  public void heal(float rate){
+    health += rate;
+    health = Math.min(maxHealth, health);
+  }
 
   /**
    * Handle player controls such as movement, interaction and firing the teleporing gun.
@@ -106,34 +124,20 @@ public class Player extends GameEntity {
   @Override
   public void update(World world) {
     if (!world.demoMode) {
-      if (Gdx.input.isKeyJustPressed(Input.Keys.Q) || health <= 0) {
-        position.set(World.MEDBAY_COORDINATES[0], World.MEDBAY_COORDINATES[1]);
-        confused = false;
-        slowed = false;
-        teleporterRayCoordinates.setZero();
-      }
-      if (Gdx.input.isKeyPressed(Input.Keys.P)){
-        System.out.println("power");
-        powerOn(world.infiltratorsCaught);
-      }
+      if (Gdx.input.isKeyJustPressed(Input.Keys.Q) || health <= 0) { respawn(World.MEDBAY_COORDINATES[0],World.MEDBAY_COORDINATES[1]);}
+      if (Gdx.input.isKeyPressed(Input.Keys.P)){ powerOn(world.infiltratorsCaught); }
 
       // Increment Auber's health if in medbay
-      if (world.medbay.getRectangle().contains(position.x, position.y)) {
-        health += World.AUBER_HEAL_RATE;
-        health = Math.min(maxHealth, health);
-      }
+      if (world.medbay.getRectangle().contains(position.x, position.y)) {heal(World.AUBER_HEAL_RATE); }
       // Slow down Auber when they charge their weapon. Should be stopped when weapon half charged,
       // hence the * 2
       float speedModifier = Math.min(world.auberTeleporterCharge * speed * 2, speed);
-      if (slowed) {
-        velocity.scl(0.5f);
-      }
+      if (slowed) { velocity.scl(0.5f); }
 
       // Flip the velocity before new velocity calculated if confused. Otherwise, second iteration
       // of flipped velocity will cancel out the first
-      if (confused) {
-        velocity.set(-velocity.x, -velocity.y);
-      }
+      if (confused) { velocity.set(-velocity.x, -velocity.y); }
+
       //Movement
       if (Gdx.input.isKeyPressed(Input.Keys.W)) {
         velocity.y = Math.min(velocity.y + speed - speedModifier, maxSpeed);
